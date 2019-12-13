@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<style>
+body {
+	background-image: url("../images/Stars.jpg") no-repeat center center fixed;
+	background-size: cover;
+	font-size: 16px;
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
+	margin: 0;
+	color: #666;
+}
+ 
+/* Typography */
+h1#title {
+	font-family: 'Roboto Slab', serif;
+	font-weight: 300;
+	font-size: 3.2em;
+	color: white;
+	text-shadow: 0 0 10px rgba(0,0,0,0.8);
+	margin: 0 auto;
+	padding-top: 180px;
+	max-width: 700px;
+	text-align: center;
+	position: relative;
+	top: 0px;
+}
+ 
+h1#title span span {
+	font-weight: 400;
+}
+ 
+h2 {
+	text-transform: uppercase;
+	color: white;
+	font-weight: 400;
+	letter-spacing: 1px;
+	font-size: 1.4em;
+	line-height: 2.8em;
+}
+ 
+a {
+	text-decoration: none;
+	color: #666;
+}
+ 
+a:hover {
+	color: #aeaeae;
+}
+ 
+p.small {
+  display: block;
+  position: center;
+	font-size: 1.1em;
+	margin-top: 22px;
+  padding: 0 20px;
+  color: white;
+}
+
+.neat {
+  display: table-cell;
+}
+.neat > div {
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #FF0000;
+}
+ 
+/* Layout */
+.container {
+	margin: 0;
+}
+ 
+.top {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background: -moz-linear-gradient(top,  rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  rgba(0,0,0,0.6) 0%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#99000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+}
+ 
+.main-box {
+  display: table;
+  width: 150%;
+	background-color: black;
+	max-width: 450px;
+	max-height: 650px;
+	margin: 0 auto;
+	position: center;
+	padding-bottom: 30px;
+	border-radius: 5px;
+	box-shadow: 0 5px 50px rgba(0,0,0,0.4);
+	text-align: center;
+}
+ 
+.main-box .box-header {
+	background-color: #360363;
+	margin-top: 0;
+	border-radius: 5px 5px 0 0;
+}
+ 
+.main-box input {
+  display: inline-block;
+	margin-top: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+  max-width: 100px;
+	padding: 6px;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	font-size: 1.1em;
+	color: white;
+}
+ 
+.main-box input:focus {
+	outline: none;
+	border-color: #665851;
+	transition: 0.5s;
+	color: white;
+}
+ 
+.button {
+  display: block;
+  margin: auto;
+  overflow: hidden;
+  margin-top: 10px;
+  min-width: 83px;
+  line-height: 39px;
+  padding: 0 24px;
+  font-size: 14px;
+  color: black;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 1px #154c86;
+  background-color: #247edd;
+  background-clip: padding-box;
+  border: 1px solid;
+  border-color: #1c65b2 #18589c #18589c;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.12) 51%, rgba(0, 0, 0, 0.04));
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.12) 51%, rgba(0, 0, 0, 0.04));
+  background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.12) 51%, rgba(0, 0, 0, 0.04));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.12) 51%, rgba(0, 0, 0, 0.04));
+}
+ 
+.button:before {
+  content: '';
+  border-radius: 50%;
+  background: transparent;
+  -webkit-box-shadow: inset 0 0 38px rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 38px rgba(255, 255, 255, 0.5);
+}
+ 
+.button:hover { 
+	background-color: #1a74d3;
+	cursor: pointer;
+}
+ 
+.button:active {
+  color: black;
+  text-shadow: 0 -1px #154c86;
+  background: #1f71c8;
+  border-color: #113f70 #154c86 #1c65b2;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.4);
+  background-image: -webkit-linear-gradient(top, #1a5da5, #3a8be0);
+  background-image: -moz-linear-gradient(top, #1a5da5, #3a8be0);
+  background-image: -o-linear-gradient(top, #1a5da5, #3a8be0);
+  background-image: linear-gradient(to bottom, #1a5da5, #3a8be0);
+}
+ 
+.button:active:before {
+  -webkit-box-shadow: inset 0 0 96px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 96px rgba(0, 0, 0, 0.2);
+}
+
+.button-grey {
+  text-shadow: 0 1px #0d4d09;
+  background-color: #F0F8FF;
+  border-color: grey;
+}
+ 
+.button-grey:hover { 
+  background-color: #DAE0E5;
+  cursor: pointer;
+}
+ 
+.button-grey:active {
+  text-shadow: 0 -1px #0d4d09;
+  background: #DAE0E5;
+  border-color: grey;
+  background-image: -webkit-linear-gradient(top, #F0F8FF, #C1C7CC);
+  background-image: -moz-linear-gradient(top, #F0F8FF, #C1C7CC);
+  background-image: -o-linear-gradient(top, #F0F8FF, #C1C7CC);
+  background-image: linear-gradient(to bottom, #F0F8FF, #C1C7CC);
+}
+
+.button-green {
+  text-shadow: 0 1px #0d4d09;
+  background-color: #1ca913;
+  border-color: #147b0e #11640b #11640b;
+}
+
+.button-green:hover { background-color: #159b0d; }
+
+.button-green:active {
+  text-shadow: 0 -1px #0d4d09;
+  background: #189210;
+  border-color: #093606 #0d4d09 #147b0e;
+  background-image: -webkit-linear-gradient(top, #126d0c, #20c016);
+  background-image: -moz-linear-gradient(top, #126d0c, #20c016);
+  background-image: -o-linear-gradient(top, #126d0c, #20c016);
+  background-image: linear-gradient(to bottom, #126d0c, #20c016);
+}
+
+.button-red {
+  text-shadow: 0 1px #72100d;
+  background-color: #cd1d18;
+  border-color: #9f1713 #891310 #891310;
+}
+
+.button-red:hover { background-color: #c01511; }
+
+.button-red:active {
+  text-shadow: 0 -1px #72100d;
+  background: #b61a15;
+  border-color: #5b0d0b #72100d #9f1713;
+  background-image: -webkit-linear-gradient(top, #921511, #e4201b);
+  background-image: -moz-linear-gradient(top, #921511, #e4201b);
+  background-image: -o-linear-gradient(top, #921511, #e4201b);
+  background-image: linear-gradient(to bottom, #921511, #e4201b);
+}
+
+.button-gold {
+  text-shadow: 0 1px #72100d;
+  background-color: #FFD700;
+  border-color: #9f1713 #891310 #891310;
+}
+
+.button-gold:hover { background-color: #E5BF00; }
+
+.button-gold:active {
+  text-shadow: 0 -1px #72100d;
+  background: #CCAD14;
+  border-color: #5b0d0b #72100d #9f1713;
+  background-image: -webkit-linear-gradient(top, #FFD700, #FFE566);
+  background-image: -moz-linear-gradient(top, #FFD700, #FFE566);
+  background-image: -o-linear-gradient(top, #FFD700, #FFE566);
+  background-image: linear-gradient(to bottom, #FFD700, #FFE566);
+}
+
+ 
+.selected {
+	color: #665851!important;
+	transition: 0.5s;
+}
+</style>
+ 
+<head>
+  <meta charset="utf-8">
+  <title>Yugioh</title>
+ 
+  <!-- Google Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+ 
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+ 
+<body>
+  <div class="container">
+    <div class="top">
+      <h1 id="title" class="hidden"><span id="logo">Duel Deck<span></span></span></h1>
+    </div>
+    <div class="main-box">
+      <div class="neat">
+        <input class="main-box" name="player1" type="text" id="player1">
+        <p class="small" id="playerScoreOne">8000</p>
+        <button onclick="subtractScore(1)" class="button button-red" id="playerScoreOneMinus">-</button>
+        <button onclick="addScore(1)" class="button button-green" id="playerScoreOnePlus">+</button>
+        <button onclick="addNum(1)" class="button button-gold" id="one">1</button>
+        <button onclick="addNum(4)" class="button button-gold" id="four">4</button>
+        <button onclick="addNum(7)" class="button button-gold" id="seven">7</button>
+        <button onclick="addNum(0)" class="button button-gold" id="zero">0</button>
+      </div>
+
+      <div class="neat">
+        <button onclick="diceRoll()" class="button" id="Dice">Dice: 0</button>
+        <button onclick="resetGame()" class="button button-grey">Reset</button>
+        <p class="small" id="calculate">0</p>
+        <button onclick="erase()" class="button">C</button>
+        <button onclick="addNum(2)" class="button button-gold" id="two">2</button>
+        <button onclick="addNum(5)" class="button button-gold" id="five">5</button>
+        <button onclick="addNum(8)" class="button button-gold" id="eight">8</button>
+        <button onclick="addNum(-1)" class="button button-gold" id="doubleZero">00</button>
+      </div>
+
+      <div class="neat">
+        <input class="main-box" name="player2" type="text" id="player2">
+        <p class="small" id="playerScoreTwo">8000</p>
+        <button onclick="subtractScore(2)" class="button button-red" id="playerScoreTwoMinus">-</button>
+        <button onclick="addScore(2)" class="button button-green" id="playerScoreTwoPlus">+</button>
+        <button onclick="addNum(3)" class="button button-gold" id="three">3</button>
+        <button onclick="addNum(6)" class="button button-gold" id="six">6</button>
+        <button onclick="addNum(9)" class="button button-gold" id="nine">9</button>
+        <button onclick="addNum(-2)" class="button button-gold" id="tripleZero">000</button>
+      </div>
+    </div>
+  </div>
+</body>
+ 
+<script>
+
+function diceRoll() {
+  num = Math.floor(Math.random() * 6) + 1;
+  document.getElementById("Dice").innerHTML = "Dice: " + num;
+}
+
+function erase() {
+  total = Number(document.getElementById("calculate").innerHTML);
+  total = Math.floor(total / 10);
+  document.getElementById("calculate").innerHTML = total.toString();
+}
+
+function addNum(num) {
+  total = Number(document.getElementById("calculate").innerHTML);
+  if (num == -1) {
+    total = total * 100;
+  } else if (num == -2) {
+    total = total * 1000;
+  } else {
+    total = (total * 10) + num;
+  }
+  if (total > 99999) {
+    total = 99999;
+  }
+  document.getElementById("calculate").innerHTML = total.toString();
+}
+
+function addScore(num) {
+  if (num == 1) {
+    score = Number(document.getElementById("playerScoreOne").innerHTML);
+  } else if (num == 2) {
+    score = Number(document.getElementById("playerScoreTwo").innerHTML);
+  }
+  total = Number(document.getElementById("calculate").innerHTML);
+  finalScore = score + total;
+
+  if (num == 1) {
+    document.getElementById("playerScoreOne").innerHTML = finalScore.toString();
+  } else if (num == 2) {
+    document.getElementById("playerScoreTwo").innerHTML = finalScore.toString();
+  }
+  document.getElementById("calculate").innerHTML = "0";
+}
+
+function subtractScore(num) {
+  if (num == 1) {
+    score = Number(document.getElementById("playerScoreOne").innerHTML);
+  } else if (num == 2) {
+    score = Number(document.getElementById("playerScoreTwo").innerHTML);
+  }
+  total = Number(document.getElementById("calculate").innerHTML);
+  finalScore = score - total;
+  if (finalScore < 0) {
+    finalScore = 0;
+  }
+
+  if (num == 1) {
+    document.getElementById("playerScoreOne").innerHTML = finalScore.toString();
+  } else if (num == 2) {
+    document.getElementById("playerScoreTwo").innerHTML = finalScore.toString();
+  }
+  document.getElementById("calculate").innerHTML = "0";
+}
+
+function resetGame() {
+  document.getElementById("playerScoreOne").innerHTML = "8000";
+  document.getElementById("playerScoreTwo").innerHTML = "8000";
+  document.getElementById("calculate").innerHTML = "0";
+}
+
+</script>
+</html>
+ 
