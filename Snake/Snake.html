@@ -1,3 +1,9 @@
+<body>
+		<div style="background-color: #008CBA; margin-left: 1px; margin-right: 1780px; padding-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px;">
+		Score: <span id = "SCORE"></span>
+		</div>
+		<canvas id='canvas' width='600' height='600'></canvas>
+</body>
 <canvas id="gc" width="400" height="400"></canvas>
 <script>
 window.onload=function() {
@@ -56,7 +62,7 @@ function game() {
 			ax=Math.floor(Math.random() * tc);
 			ay=Math.floor(Math.random() * tc);
 	}
-
+	document.getElementById("SCORE").innerHTML = score;
 	ctx.fillStyle="red";
 	ctx.fillRect(ax*gs, ay*gs, gs-2, gs-2);
 }
