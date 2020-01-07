@@ -1,5 +1,7 @@
 var COLS = 10, ROWS = 10, MINES = 13, FLAGS = 13; //FLAGS variable used for tracker in HTML
 document.getElementById("FLAGS").innerHTML = FLAGS;
+document.getElementById("dead").style.display = "none";
+document.getElementById("sunglass").style.display = "none";
 var board = [];
 var state = [];
 var STATE_CLOSED = 0,
@@ -80,6 +82,8 @@ function openBlock(x, y) {
 		alert('Game Over');
 		playing = false;
 		revealBoard(false);
+		document.getElementById("smiley").style.display = "none";
+		document.getElementById("dead").style.display = "block";
 		return;
 	}
 	
@@ -101,6 +105,8 @@ function openBlock(x, y) {
 		alert('You Win!');
 		revealBoard(true);
 		playing = false;
+		document.getElementById("smiley").style.display = "none";
+		document.getElementById("sunglass").style.display = "block";
 	}
 }
 
