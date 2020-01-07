@@ -1,4 +1,5 @@
-var COLS = 10, ROWS = 10, MINES = 13;
+var COLS = 10, ROWS = 10, MINES = 13, FLAGS = 13; //FLAGS variable used for tracker in HTML
+document.getElementById("FLAGS").innerHTML = FLAGS;
 var board = [];
 var state = [];
 var STATE_CLOSED = 0,
@@ -123,7 +124,14 @@ function flagBlock(x, y) {
 	if (state[y][x] == STATE_OPENED) {
 		return;
 	}
-	state[y][x] = 1 - state[y][x];	
+	state[y][x] = 1 - state[y][x];
+	if (state[y][x] == 1) {
+		FLAGS = FLAGS - 1;
+	} else if (state[y][x] == 0) {
+		FLAGS = FLAGS + 1;
+	}
+	document.getElementById("FLAGS").innerHTML = FLAGS;
+	
 }
 
 //reveals the board after victory or defeat has been determined

@@ -30,10 +30,13 @@
 		}
     </script>
 	<body onLoad="startTimer()">
-		<div style="background-color: #008CBA; margin-left: 1px; margin-right: 1780px; padding-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px;">
-		Time: <span id="ELAPSED"></span>
+		<p style="margin:1; text-align: center; font-size: 300%; font-family:helvetica;color: #00000;"> <b>MineSweeper</b> </p>
+		<div id="win" style="background-color: #696969; border-style: solid; border-color: green; height: 100px; width: 600px; top: 0; bottom: 0; right: 0; left: 0; position: relative; margin: auto;">
+			<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Happy Face</b> </p>
+			<p style="margin:0; float: right; font-size: 200%; font-family:helvetica;color: #000000;"><b><span style="color: #8B0000"; id="ELAPSED"></span></b></p>
+			<p style="margin:0; float: left; font-size: 200%; font-family:helvetica;color: #8B0000;"> <b><span id="FLAGS"></span></b> </p>
 		</div>
-		<canvas id='canvas' width='600' height='600'></canvas>
+		<canvas id="canvas" width="600" height="600" style="display: block; margin: 0 auto; background-color: #553300; border-style: solid; border-color: green;">
 		<script src='MineSweeper.js'></script>
 		<script src='MineSweeperRender.js'></script>
 		<script src='MineSweeperController.js'></script>

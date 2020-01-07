@@ -1,10 +1,43 @@
-<body>
-		<div style="background-color: #008CBA; margin-left: 1px; margin-right: 1780px; padding-bottom: 8px; padding-left: 8px; padding-right: 8px; padding-top: 8px;">
-		Score: <span id = "SCORE"></span>
-		</div>
-		<canvas id='canvas' width='600' height='600'></canvas>
+<head>
+    <title>Snake</title>
+</head>
+
+<body style="background-color: #888">
+	<style>
+	#overlay {
+	position: absolute;
+	display: none;
+	top: 18%;
+	left: 40%;
+	right: 40%;
+	z-index: 2;
+	}
+	#win {
+	position: absolute;
+	display: none;
+	top: 18%;
+	left: 40%;
+	right: 40%;
+	z-index: 2;
+	}
+	</style>
+
+    <p style="margin:1; text-align: center; font-size: 300%; font-family:helvetica;color: #00000;"> <b>Snake</b> </p>
+	<div>
+	  <div id="overlay" style="background-color: #696969; border-style: solid; border-color: green; opacity: 0.75;">
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Game Over</b> </p>
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Final Score: </b><b><span id = "SCORE"></span></b> </p>
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Press r to restart</b> </p>
+	  </div>
+	  <div id="win" style="background-color: #696969; border-style: solid; border-color: green; opacity: 0.75;">
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>You won!</b> </p>
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Final Score: </b><b><span id = "SCORE2"></span></b> </p>
+		<p style="margin:0; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;"> <b>Press r to restart</b> </p>
+	  </div>
+      <canvas id="gc" width="400" height="400" style="display: block; margin: 0 auto; background-color: #553300; border-style: solid; border-color: green;">
+	</div>
+	<p style="margin:0; text-align: center; font-size: 300%; font-family:helvetica;color: #000000;"> <b>Score: </b><b><span id = "SCORE3"></span></b> </p>
 </body>
-<canvas id="gc" width="400" height="400"></canvas>
 <script>
 window.onload=function() {
 	canv=document.getElementById("gc");
@@ -16,10 +49,47 @@ score = 0;
 px=py=10;
 gs=tc=20;
 ax=ay=15;
-xv=yv=0;
+xv=0; yv=1;
 trail=[];
 tail=5;
+keyBuffer =[];
+dead = false;
+won = false;
+
+var update = function() {
+    // *** Extract next key from buffer, and only treat that one
+    // -- could be `undefined`, but that is not a problem:
+    var key = keyBuffer.shift();
+	if (!dead && !won) {
+		if((!(xv == 1 && yv == 0)) && key === 37){
+			xv=-1; yv=0;
+		} else if((!(xv == 0 && yv == 1)) && key === 38){
+			xv=0; yv=-1;
+		} else if((!(xv == -1 && yv == 0)) && key === 39){
+			xv=1; yv=0;
+		} else if((!(xv == 0 && yv == -1)) && key === 40){
+			xv=0; yv=1;
+		}
+	} else {
+		if (key === 82) {
+			score = 0;
+			px=py=10;
+			gs=tc=20;
+			ax=ay=15;
+			xv=0; yv=1;
+			trail=[];
+			tail=5;
+			keyBuffer =[];
+			dead = false;
+			won = false;
+			document.getElementById("overlay").style.display = "none";
+			document.getElementById("win").style.display = "none";
+		}
+	}
+};
+
 function game() {
+	update();
 	px+=xv;
 	py+=yv;
 	if (px < 0) {
@@ -45,49 +115,54 @@ function game() {
 			ctx.fillRect(trail[trail.length - 1].x*gs, trail[trail.length - 1].y*gs, gs-2, gs-2);
 		}
 		if (trail[i].x==px && trail[i].y==py) {
-			tail = 5;
-			score = 0;
+			xv = 0; yv = 0;
+			dead = true;
+			if (!won) {
+				ctx.fillStyle="red";
+				ctx.fillRect(trail[i].x*gs, trail[i].y*gs, gs-2, gs-2);
+				document.getElementById("overlay").style.display = "block";
+			}
 		}
 	}
-
-	trail.push({x:px, y:py});
-	while (trail.length > tail) {
-		trail.shift();
+	if (!dead && !won) {
+		trail.push({x:px, y:py});
+		while (trail.length > tail) {
+			trail.shift();
+		}
 	}
 
 	if (ax==px && ay==py) {
 			tail++;
 			score++;
-			console.log(score);
-			ax=Math.floor(Math.random() * tc);
-			ay=Math.floor(Math.random() * tc);
+			if (score == 400) {
+				won = true;
+				document.getElementById("win").style.display = "block";
+			} else {
+				inTail = true;
+				while (inTail) {
+					inTail = false;
+					ax=Math.floor(Math.random() * tc);
+					ay=Math.floor(Math.random() * tc);
+					for (var i = 0; i < trail.length; i++) {
+						if (trail[i].x == ax && trail[i].y == ay) {
+							inTail = true;
+						}
+					}
+				}
+			}
 	}
 	document.getElementById("SCORE").innerHTML = score;
+	document.getElementById("SCORE2").innerHTML = score;
+	document.getElementById("SCORE3").innerHTML = score;
 	ctx.fillStyle="red";
 	ctx.fillRect(ax*gs, ay*gs, gs-2, gs-2);
 }
+
 function keyPush(evt) {
-	switch(evt.keyCode) {
-		case 37:
-			if (!(xv == 1 && yv == 0)) {
-				xv=-1; yv=0;
-			}
-			break;
-		case 38:
-			if (!(xv == 0 && yv == 1)) {
-				xv=0; yv=-1;
-			}
-			break;
-		case 39:
-			if (!(xv == -1 && yv == 0)) {
-				xv=1; yv=0;
-			}
-			break;
-		case 40:
-			if (!(xv == 0 && yv == -1)) {
-				xv=0; yv=1;
-			}
-			break;
+	keyCode = evt.keyCode;
+	// *** Queue the arrow key presses
+	if (keyCode !== keyBuffer[keyBuffer.length-1]) {
+		keyBuffer = keyBuffer.slice(-3).concat(keyCode);
 	}
 }
 </script>
