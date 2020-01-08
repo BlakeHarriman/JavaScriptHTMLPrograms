@@ -1,0 +1,42 @@
+canvas {
+	display: block;
+	margin: auto;
+}
+
+overlay {
+	position: absolute;
+	display: none;
+	top: 18%;
+	left: 40%;
+	right: 40%;
+	z-index: 2;
+}
+
+win {
+	position: absolute;
+	top: 10%;
+	left: 20%;
+	right: 20%;
+}
+
+button {
+  background-color: #808080;
+  border: block;
+  color: black;
+  padding: 24px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 2px;
+  cursor: pointer;
+}
+
+img {
+        display: block;
+        left: 17%;
+        position: absolute;
+        top: 16%;
+		cursor: pointer;
+        z-index: 1;
+    }
