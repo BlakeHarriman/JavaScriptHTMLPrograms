@@ -33,14 +33,19 @@
 		<p style="margin:1; text-align: center; font-size: 300%; font-family:helvetica;color: #00000;"> <b>MineSweeper</b> </p>
 		<div id="win" style="background-color: #696969; border-style: solid; border-color: green; height: 80px; width: 600px; top: 0; bottom: 0; right: 0; left: 0; position: relative; margin: auto;">
 			<span id="smiley" style="margin:0; margin-top: 12px; display: inline-block; margin-left: 275px; position: absolute; text-align: center;">
-				<button class="button"></button>
-				<img class="smile" src="Smile.png"></img>
+				<button class="button" onclick="reset()">
+					<img class="smile" src="Smile.png"></img>
+				</button>
 			</span>
-			<span id="dead" style="margin:0; margin-top: 20px; display: inline-block; margin-left: 200px; position: absolute; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;">
-				<img class="dead" src="Dead.png"></img>
+			<span id="dead" style="margin:0; margin-top: 12px; display: inline-block; margin-left: 275px; position: absolute; text-align: center;">
+				<button class="button" onclick="reset()">
+					<img class="dead" src="Dead.png"></img>
+				</button>
 			</span>
-			<span id="sunglass" style="margin:0; margin-top: 20px; display: inline-block; margin-left: 200px; position: absolute; text-align: center; font-size: 200%; font-family:helvetica;color: #000000;">
-				<img class="sunglass" src="Sunglass.png"></img>
+			<span id="sunglass" style="margin:0; margin-top: 12px; display: inline-block; margin-left: 275px; position: absolute; text-align: center;">
+				<button class="button" onclick="reset()">
+					<img class="sunglass" src="Sunglass.png"></img>
+				</button>
 			</span>
 			<span style="margin:0; margin-top: 20px; margin-right: 15px; float: right; font-size: 200%; font-family:helvetica;color: #000000;"><b><span style="color: #8B0000"; id="ELAPSED"></span></b></span>
 			<span style="margin:0; margin-top: 20px; margin-left: 15px; float: left; font-size: 200%; font-family:helvetica;color: #8B0000;"> <b><span id="FLAGS"></span></b> </span>

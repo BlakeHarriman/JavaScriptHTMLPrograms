@@ -1,4 +1,4 @@
-var COLS = 10, ROWS = 10, MINES = 13, FLAGS = 13; //FLAGS variable used for tracker in HTML
+var COLS = 10, ROWS = 10, MINES = 11, DEAD = false, FLAGS = 11;//FLAGS variable used for tracker in HTML
 document.getElementById("FLAGS").innerHTML = FLAGS;
 document.getElementById("dead").style.display = "none";
 document.getElementById("sunglass").style.display = "none";
@@ -79,9 +79,9 @@ function openBlock(x, y) {
 		return;
 	}
 	if (board[y][x] == BLOCK_MINE) { //If it is a mine then game over
-		alert('Game Over');
 		playing = false;
 		revealBoard(false);
+		DEAD = true;
 		document.getElementById("smiley").style.display = "none";
 		document.getElementById("dead").style.display = "block";
 		return;
@@ -102,9 +102,9 @@ function openBlock(x, y) {
 		}
 	}
 	if (checkVictory()) { //check for victory
-		alert('You Win!');
 		revealBoard(true);
 		playing = false;
+		flagBlock(0, 0); //Called to set the FLAGS variable to 0 for HTML update
 		document.getElementById("smiley").style.display = "none";
 		document.getElementById("sunglass").style.display = "block";
 	}
@@ -127,14 +127,18 @@ function checkVictory() {
 //flag the block
 
 function flagBlock(x, y) {
-	if (state[y][x] == STATE_OPENED) {
-		return;
-	}
-	state[y][x] = 1 - state[y][x];
-	if (state[y][x] == 1) {
-		FLAGS = FLAGS - 1;
-	} else if (state[y][x] == 0) {
-		FLAGS = FLAGS + 1;
+	if (playing) {
+		if (state[y][x] == STATE_OPENED) {
+			return;
+		}
+		state[y][x] = 1 - state[y][x];
+		if (state[y][x] == 1) {
+			FLAGS = FLAGS - 1;
+		} else if (state[y][x] == 0) {
+			FLAGS = FLAGS + 1;
+		}
+	} else if (!playing && !DEAD) {
+		FLAGS = 0;
 	}
 	document.getElementById("FLAGS").innerHTML = FLAGS;
 	
@@ -153,4 +157,20 @@ function revealBoard(victorious) {
 		}
 	}
 }
+
+function reset() {
+	seconds = -1;
+	board = [];
+	state = [];
+	playing = true;
+	DEAD = false;
+	FLAGS = 11;
+	document.getElementById("FLAGS").innerHTML = FLAGS;
+	document.getElementById("smiley").style.display = "block";
+	document.getElementById("sunglass").style.display = "none";
+	document.getElementById("dead").style.display = "none";
+	init();
+	render();
+}
+
 init();
