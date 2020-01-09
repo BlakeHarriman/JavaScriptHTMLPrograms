@@ -17,7 +17,9 @@
 
 		function tick()
 		{
-			++seconds;
+			if (playing) {
+				++seconds;
+			}
 			var secs = seconds;
 			var hrs = Math.floor( secs / 3600 );
 			secs %= 3600;
@@ -30,7 +32,7 @@
 		}
     </script>
 	<body onLoad="startTimer()" style="background-color: #888">
-		<p style="margin:1; text-align: center; font-size: 300%; font-family:helvetica;color: #00000;"> <b>MineSweeper</b> </p>
+		<p class="noselect" style="margin:1; text-align: center; font-size: 300%; font-family:helvetica;color: #00000;"> <b>MineSweeper</b> </p>
 		<div id="win" style="background-color: #696969; border-style: solid; border-color: green; height: 80px; width: 600px; top: 0; bottom: 0; right: 0; left: 0; position: relative; margin: auto;">
 			<span id="smiley" style="margin:0; margin-top: 12px; display: inline-block; margin-left: 275px; position: absolute; text-align: center;">
 				<button class="button" onclick="reset()">
@@ -47,8 +49,8 @@
 					<img class="sunglass" src="Sunglass.png"></img>
 				</button>
 			</span>
-			<span style="margin:0; margin-top: 20px; margin-right: 15px; float: right; font-size: 200%; font-family:helvetica;color: #000000;"><b><span style="color: #8B0000"; id="ELAPSED"></span></b></span>
-			<span style="margin:0; margin-top: 20px; margin-left: 15px; float: left; font-size: 200%; font-family:helvetica;color: #8B0000;"> <b><span id="FLAGS"></span></b> </span>
+			<span class="noselect" style="margin:0; margin-top: 20px; margin-right: 15px; float: right; font-size: 200%; font-family:helvetica;color: #000000;"><b><span class="noselect" style="color: #8B0000"; id="ELAPSED"></span></b></span>
+			<span class="noselect" style="margin:0; margin-top: 20px; margin-left: 15px; float: left; font-size: 200%; font-family:helvetica;color: #8B0000;"> <b><span class="noselect" id="FLAGS"></span></b> </span>
 		</div>
 		<canvas id="canvas" width="600" height="600" style="display: block; margin: 0 auto; background-color: #553300; border-style: solid; border-color: green;">
 		<script src='MineSweeper.js'></script>
