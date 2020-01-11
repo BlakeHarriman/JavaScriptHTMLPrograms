@@ -1,11 +1,15 @@
-var COLS = 28, ROWS = 36, MINES = 13, FLAGS = 13; //FLAGS variable used for tracker in HTML
+var COLS = 28, ROWS = 36; //FLAGS variable used for tracker in HTML
 var board = [];
 var state = [];
-var STATE_CLOSED = 0,
-	STATE_OPENED = 2,
-	STATE_FLAGGED = 1;
-var BLOCK_MINE = -1;
+var BLANK = -1
+var WALL = 0;
+var PELLET = 1;
+var PACMAN = 2;
 var playing = true;
+px=26;
+py=13;
+gs=tc=20;
+xv=0; yv=0;
 
 //Checks to make sure tha the coordinates are in bounds
 
@@ -20,10 +24,29 @@ function init() {
 		board.push([]);
 		state.push([]);
 		for (var x = 0; x < ROWS; x++) {
-			board[y].push(0);
-			state[y].push(STATE_CLOSED);
+			if (inMap(x, y)) {
+				board[y].push(0);
+				state[y].push(WALL);
+			} else if (x == px && y == py) {
+				board[y].push(2);
+				state[y].push(PACMAN);
+			} else if (isBlank(x, y)) {
+				board[y].push(-1);
+				state[y].push(BLANK);
+			} else {
+				board[y].push(1);
+				state[y].push(PELLET);
+			}
 		}
 	}
+	for (var y = 0; y < COLS; y++) {
+		for (var x = 0; x < ROWS; x++) {
+			console.log("X: " + x);
+			console.log("Y: " + y);
+			console.log("STATE: " + state[y][x]);
+		}
+	}
+	console.log("EAFASDLFKJASDLFKJASDFLJASDFSDJF");
 }
 
 //Opens the block when it is clicked on
@@ -109,6 +132,70 @@ function revealBoard(victorious) {
 			}
 			state[y][x] = STATE_OPENED;
 		}
+	}
+}
+
+//This function exists to put all of the messy if statements into one method for generating the maze
+function inMap(x, y) {
+	if (x == 3 || x == 33) {
+		return true;
+	}
+	if ((y == 0 || y == 27) && ((x > 2 && x < 13) || (x == 16) || (x == 18) || (x > 21 && x < 34))) {
+		return true;
+	}
+	if ((y == 1 || y == 26) && ((x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 27) || (x == 28))) {
+		return true;
+	}
+	if ((y == 2 || y == 25) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 24) || (x == 25) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 3 || y == 24) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 24) || (x == 25) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 4 || y == 23) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x > 23 && x < 29) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 5 || y == 22) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x > 11 && x < 17) || (x > 17 && x < 23) || (x > 23 && x < 29) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 6 || y == 21) && ((x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 7 || y == 20) && ((x > 4 && x < 8) || (x > 8 && x < 17) || (x > 17 && x < 23) || (x == 24) || (x == 25) || (x > 26 && x < 32))) {
+		return true;
+	}
+	if ((y == 8 || y == 19) && ((x == 5) || (x == 7) || (x > 8 && x < 17) || (x > 17 && x < 23) || (x == 24) || (x == 25) || (x > 26 && x < 32))) {
+		return true;
+	}
+	if ((y == 9 || y == 18) && ((x == 5) || (x == 7) || (x == 12) || (x == 13) || (x == 24) || (x == 25) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 10 || y == 17) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 13) || (x > 14 && x < 20) || (x == 21) || (x == 22) || (x == 24) || (x == 25) || (x == 27) || (x == 28) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 11 || y == 16) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x == 12) || (x == 13) || (x == 15) || (x == 19) || (x == 21) || (x == 22) || (x == 24) || (x == 25) || (x == 27) || (x == 28) || (x == 30) || (x == 31))) {
+		return true;
+	}
+	if ((y == 12 || y == 15) && ((x == 9) || (x == 10) || (x == 15) || (x == 19) || (x == 21) || (x == 22) || (x == 27) || (x == 28))) {
+		return true;
+	}
+	if ((y == 13 || y == 14) && ((x > 3 && x < 8) || (x > 8 && x < 14) || (x == 15) || (x == 19) || (x > 20 && x < 26) || (x > 26 && x < 32))) {
+		return true;
+	}
+}
+
+function isBlank(x, y) {
+	if (x == 0 || x == 1 || x == 2 || x == 35 || x == 34) {
+		return true;
+	}
+	if (((y > -1 && y < 5) || (y > 22 && y < 28)) && ((x > 12 && x < 16) || (x > 18 && x < 22))) {
+		return true;
+	}
+	if ((x == 6) && ((y == 3) || (y == 4) || (y == 8) || (y == 9) || (y == 10) || (y == 17) || (y == 18) || (y == 19) || (y == 23) || (y == 24))) {
+		return true;
+	}
+	if (((x == 16) ||(x == 17) || (x == 18)) && ((y > 10 && y < 17))) {
+		return true;
 	}
 }
 init();

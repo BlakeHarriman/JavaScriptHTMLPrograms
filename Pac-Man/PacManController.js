@@ -1,18 +1,32 @@
-canvas.addEventListener('mousedown', function(e) {
-	var MOUSE_LEFT = 1,
-		MOUSE_RIGHT = 3;
-	var x = e.clientX - canvas.offsetLeft,
-		y = e.clientY - canvas.offsetTop;
-		
-	var modelCoordinates = viewToModel(x, y);
+console.log("REEEEEEEEEE");
+document.addEventListener("keydown", function(e) {
+	const key = e.keyCode;
+	console.log("KEYYYYYYYYYY: " + key);
+    if(/*(!(xv == 1 && yv == 0)) && */key === 37){ //Left Arrow
+		//py--;
+		if (state[py-1][px] != 0) {
+			xv=0; yv=-1;
+		}
+		console.log("hi");
+	} else if(/*(!(xv == 0 && yv == 1)) && */key === 38){ //Up Arrow
+		//py--;
+		if (state[py][px-1] != 0) {
+			xv=-1; yv=0;
+		}
+		console.log("bi");
+	} else if(/*(!(xv == -1 && yv == 0)) && */key === 39){ //Right Arrow
+		//px++;
+		if(state[py+1][px] != 0) {
+			xv=0; yv=1;
+		}
+		console.log("sigh");
 
-	//If left click, then open block.  If right click, then flag block
-	switch(e.which) {
-		case MOUSE_LEFT:
-			openBlock(modelCoordinates.x, modelCoordinates.y);
-			break;
-		case MOUSE_RIGHT:
-			flagBlock(modelCoordinates.x, modelCoordinates.y);			
+	} else if(/*(!(xv == 0 && yv == -1)) && */key === 40){ //Down Arrow
+		//py++;
+		if (state[py][px+1] != 0) {
+			xv=1; yv=0;
+		}
+		console.log("Cry");
 	}
 	render();
 	return false;
