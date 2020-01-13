@@ -2,6 +2,7 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
+firstPress = 1;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
@@ -14,23 +15,41 @@ var colors = [
 
 var update = function() {
 	var key = keyBuffer.shift();
+	//if (keyBuffer[0] != null) {
+	//	key = keyBuffer[0];
+	//}
 	console.log("KEYYYYYYYYYY: " + key);
     if(key === 37){ //Left Arrow
 		//py--;
 		if (state[py-1][px] != 0) {
 			xv=0; yv=-1;
+		} else if (keyBuffer[0] == 39) {
+			//keyBuffer.shift();
+			//keyBuffer.push(key);
+		} else {
+			keyBuffer.push(key);
 		}
 		console.log("hi");
 	} else if(key === 38){ //Up Arrow
 		//py--;
 		if (state[py][px-1] != 0) {
 			xv=-1; yv=0;
+		} else if (keyBuffer[0] == 40) {
+			//keyBuffer.shift();
+			//keyBuffer.push(key);
+		} else {
+			keyBuffer.push(key);
 		}
 		console.log("bi");
 	} else if(key === 39){ //Right Arrow
 		//px++;
 		if(state[py+1][px] != 0) {
 			xv=0; yv=1;
+		} else if (keyBuffer[0] == 37) {
+			//keyBuffer.shift();
+			//keyBuffer.push(key);
+		} else {
+			keyBuffer.push(key);
 		}
 		console.log("sigh");
 
@@ -38,9 +57,15 @@ var update = function() {
 		//py++;
 		if (state[py][px+1] != 0) {
 			xv=1; yv=0;
+		} else if (keyBuffer[0] == 38) {
+			//keyBuffer.shift();
+			//keyBuffer.push(key);
+		} else {
+			keyBuffer.push(key);
 		}
 		console.log("Cry");
 	}
+	firstPress = 0;
 }	
 
 //Gets the view coordinates
@@ -96,7 +121,6 @@ function renderBlock(x, y, state, nextState) {
 //Renders the board
 
 function render() {
-	update();
 	ctx.fillStyle="black";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	if (px == 17 && ((py + yv) == 28)) {
@@ -118,6 +142,7 @@ function render() {
 			state[py-yv][px-xv] = -1;
 		}
 	}
+	update();
 	for (var y = 0; y < COLS; y++) {
 		for (var x = 0; x < ROWS; x++) {
 			if (log == 3 && state[y][x] == 2) {
