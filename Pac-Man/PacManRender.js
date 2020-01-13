@@ -2,6 +2,7 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
+keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
 var canvas = document.getElementById('canvas'),
@@ -10,9 +11,39 @@ var canvas = document.getElementById('canvas'),
 var colors = [
 		'blue', 'darkgreen', 'red', 'navyblue', 'darkgred', 'cyan', 'purple', 'black'
 		];
-	
+
+var update = function() {
+	var key = keyBuffer.shift();
+	console.log("KEYYYYYYYYYY: " + key);
+    if(key === 37){ //Left Arrow
+		//py--;
+		if (state[py-1][px] != 0) {
+			xv=0; yv=-1;
+		}
+		console.log("hi");
+	} else if(key === 38){ //Up Arrow
+		//py--;
+		if (state[py][px-1] != 0) {
+			xv=-1; yv=0;
+		}
+		console.log("bi");
+	} else if(key === 39){ //Right Arrow
+		//px++;
+		if(state[py+1][px] != 0) {
+			xv=0; yv=1;
+		}
+		console.log("sigh");
+
+	} else if(key === 40){ //Down Arrow
+		//py++;
+		if (state[py][px+1] != 0) {
+			xv=1; yv=0;
+		}
+		console.log("Cry");
+	}
+}	
+
 //Gets the view coordinates
-	
 function modelToView(x, y) {
 	return {
 		x: x * BLOCK_W,
@@ -65,6 +96,7 @@ function renderBlock(x, y, state, nextState) {
 //Renders the board
 
 function render() {
+	update();
 	ctx.fillStyle="black";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	if (px == 17 && ((py + yv) == 28)) {
@@ -112,4 +144,4 @@ if (log == 2) {
 	}
 }
 log = 1;
-setInterval(render, 1000/10);
+setInterval(render, 1000/15);
