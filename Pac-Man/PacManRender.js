@@ -2,7 +2,7 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-firstPress = 1;
+speed = 1;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
@@ -14,58 +14,43 @@ var colors = [
 		];
 
 var update = function() {
+	if (xv != 0 || yv != 0) {
+		firstPress = 0;
+	}
+	console.log(keyBuffer);
 	var key = keyBuffer.shift();
-	//if (keyBuffer[0] != null) {
-	//	key = keyBuffer[0];
-	//}
-	console.log("KEYYYYYYYYYY: " + key);
     if(key === 37){ //Left Arrow
 		//py--;
 		if (state[py-1][px] != 0) {
 			xv=0; yv=-1;
-		} else if (keyBuffer[0] == 39) {
-			//keyBuffer.shift();
-			//keyBuffer.push(key);
-		} else {
+		} else if (keyBuffer[0] != 39) {
 			keyBuffer.push(key);
 		}
-		console.log("hi");
 	} else if(key === 38){ //Up Arrow
 		//py--;
 		if (state[py][px-1] != 0) {
 			xv=-1; yv=0;
-		} else if (keyBuffer[0] == 40) {
-			//keyBuffer.shift();
-			//keyBuffer.push(key);
-		} else {
+		} else if (keyBuffer[0] != 40) {
 			keyBuffer.push(key);
 		}
-		console.log("bi");
 	} else if(key === 39){ //Right Arrow
 		//px++;
 		if(state[py+1][px] != 0) {
 			xv=0; yv=1;
-		} else if (keyBuffer[0] == 37) {
-			//keyBuffer.shift();
-			//keyBuffer.push(key);
-		} else {
+		} else if (keyBuffer[0] != 37) {
 			keyBuffer.push(key);
 		}
-		console.log("sigh");
-
 	} else if(key === 40){ //Down Arrow
 		//py++;
 		if (state[py][px+1] != 0) {
 			xv=1; yv=0;
-		} else if (keyBuffer[0] == 38) {
-			//keyBuffer.shift();
-			//keyBuffer.push(key);
-		} else {
+		} else if (keyBuffer[0] != 38) {
 			keyBuffer.push(key);
 		}
-		console.log("Cry");
 	}
-	firstPress = 0;
+	if (xv == 0 && yv == 0) {
+		keyBuffer.shift();
+	}
 }	
 
 //Gets the view coordinates
@@ -159,14 +144,5 @@ function render() {
 }
 
 render();
-if (log == 2) {
-	for (var y = 0; y < COLS; y++) {
-			for (var x = 0; x < ROWS; x++) {
-				console.log("X: " + x);
-				console.log("Y: " + y);
-				console.log("STATE: " + state[y][x]);
-			}
-	}
-}
 log = 1;
 setInterval(render, 1000/15);
