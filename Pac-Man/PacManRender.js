@@ -20,28 +20,28 @@ var update = function() {
 	var key = keyBuffer.shift();
     if(key === 37){ //Left Arrow
 		//py--;
-		if (state[py-1][px] != 0) {
+		if (map[px][py-1] != 0) {
 			xv=0; yv=-1;
 		} else if (keyBuffer[0] != 39) {
 			keyBuffer.push(key);
 		}
 	} else if(key === 38){ //Up Arrow
 		//py--;
-		if (state[py][px-1] != 0) {
+		if (map[px-1][py] != 0) {
 			xv=-1; yv=0;
 		} else if (keyBuffer[0] != 40) {
 			keyBuffer.push(key);
 		}
 	} else if(key === 39){ //Right Arrow
 		//px++;
-		if(state[py+1][px] != 0) {
+		if(map[px][py+1] != 0) {
 			xv=0; yv=1;
 		} else if (keyBuffer[0] != 37) {
 			keyBuffer.push(key);
 		}
 	} else if(key === 40){ //Down Arrow
 		//py++;
-		if (state[py][px+1] != 0) {
+		if (map[px+1][py] != 0) {
 			xv=1; yv=0;
 		} else if (keyBuffer[0] != 38) {
 			keyBuffer.push(key);
@@ -77,8 +77,8 @@ function renderBlock(x, y, state, nextState) {
 		ctx.fillStyle = '#0000FF';
 	
 		ctx.strokeStyle = 'black';
-		ctx.fillRect(viewCoordinates.y, viewCoordinates.x, BLOCK_W, BLOCK_H);
-		ctx.strokeRect(viewCoordinates.y, viewCoordinates.x, BLOCK_W, BLOCK_H);
+		ctx.fillRect(viewCoordinates.x, viewCoordinates.y, BLOCK_W, BLOCK_H);
+		ctx.strokeRect(viewCoordinates.x, viewCoordinates.y, BLOCK_W, BLOCK_H);
 	} else if (state == 2) {
 		//if (nextState == 0) {
 		//	xv = 0;
@@ -88,7 +88,7 @@ function renderBlock(x, y, state, nextState) {
 		
 		ctx.strokeStyle = 'yellow';
 		ctx.beginPath();
-		ctx.arc(viewCoordinates.y + BLOCK_W/2, viewCoordinates.x + BLOCK_H/2, 5, 0, 2 * Math.PI);
+		ctx.arc(viewCoordinates.x + BLOCK_W/2, viewCoordinates.y + BLOCK_H/2, 5, 0, 2 * Math.PI);
 		ctx.fill();
 		ctx.stroke();
 	} else if (state == 1) {
@@ -96,7 +96,7 @@ function renderBlock(x, y, state, nextState) {
 		
 		ctx.strokeStyle = '#FFDAB9';
 		ctx.beginPath();
-		ctx.arc(viewCoordinates.y + BLOCK_W/2, viewCoordinates.x + BLOCK_H/2, 3, 0, 2 * Math.PI);
+		ctx.arc(viewCoordinates.x + BLOCK_W/2, viewCoordinates.y + BLOCK_H/2, 3, 0, 2 * Math.PI);
 		ctx.fill();
 		ctx.stroke();
 	}
@@ -108,36 +108,33 @@ function render() {
 	ctx.fillStyle="black";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	if (px == 17 && ((py + yv) == 28)) {
-		state[py][px] = -1;
+		map[px][py] = -1;
 		py = 0;
 	}
 	if (px == 17 && ((py + yv) == -1)) {
-		state[py][px] = -1;
+		map[px][py] = -1;
 		py = 27;
 	}
-	if (state[py+yv][px+xv] == 0) {
+	if (map[px+xv][py+yv] == 0) {
 			xv = 0; yv = 0;
 	}
 	px+=xv;
 	py+=yv;
-	if (state[py][px] != 0) {
-		state[py][px] = 2;
+	if (map[px][py] != 0) {
+		map[px][py] = 2;
 		if (xv != 0 || yv != 0) {
-			state[py-yv][px-xv] = -1;
+			map[px-xv][py-yv] = -1;
 		}
 	}
 	update();
-	for (var y = 0; y < COLS; y++) {
-		for (var x = 0; x < ROWS; x++) {
-			if (log == 3 && state[y][x] == 2) {
-				console.log("PX: " + px);
-				console.log("PY: " + py);
-				console.log("Seperate");
+	for (var y = 0; y < ROWS; y++) {
+		for (var x = 0; x < COLS; x++) {
+			if (log == 4) {
 				console.log("X: " + x);
 				console.log("Y: " + y);
-				console.log("STATE: " + state[y][x]);
+				console.log("STATE: " + map[y][x]);
 			}
-			renderBlock(x, y, state[y][x]);
+			renderBlock(x, y, map[y][x]);
 		}
 	}
 }
