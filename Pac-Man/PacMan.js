@@ -27,7 +27,82 @@ function inBounds(x, y) {
 
 //Initializes the board and state to empty and closed state
 
+/*function init() {
+	for (var y = 0; y < COLS; y++) {
+		board.push([]);
+		state.push([]);
+		for (var x = 0; x < ROWS; x++) {
+			if (inMap(x, y)) {
+				board[y].push(0);
+				state[y].push(WALL);
+			} else if (x == px && y == py) {
+				board[y].push(2);
+				state[y].push(PACMAN);
+			} else if (isBlank(x, y)) {
+				board[y].push(-1);
+				state[y].push(BLANK);
+			} else {
+				board[y].push(1);
+				state[y].push(PELLET);
+			}
+		}
+	}
+	for (var y = 0; y < COLS; y++) {
+		for (var x = 0; x < ROWS; x++) {
+			console.log("X: " + x);
+			console.log("Y: " + y);
+			console.log("STATE: " + state[y][x]);
+		}
+	}
+	console.log("EAFASDLFKJASDLFKJASDFLJASDFSDJF");
+}*/
+
+var maze = {
+	canvas : document.createElement("canvas"),
+	start : function() {
+		canvas.width = 448;
+		canvas.height = 576;
+		context = canvas.getContext("2d");
+		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+	},
+	
+	clear: function() {
+		context.clearRect(0, 0, canvas.width, canvas.height);
+	}
+}
+
+function component(width, height, color, x, y, type) {
+	this.width = width;
+	this.height = height;
+	this.color = color;
+	this.x = x;
+	this.y = y;
+	this.type = type;
+	this.speed = 1;
+	this.angle = 0;
+	this.update = function() {
+        ctx = canvas.context;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.fillStyle = color;
+        ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);        
+        ctx.restore();    
+    }
+	this.newPos = function() {
+        this.x += this.speed * Math.sin(this.angle);
+        this.y -= this.speed * Math.cos(this.angle);
+    }
+}
+
+
 function init() {
+	pacman = new component (5, 5, "yellow", 26, 13, "pac");
+	blinky = new component (5, 5, "red", 16, 12, "ghost");
+	inky = new component (5, 5, "blue", 16, 13, "ghost");
+	pinky = new component (5, 5, "pink", 16, 14, "ghost");
+	clyde = new component (5, 5, "orange", 16, 15, "ghost");
+	
 	for (var y = 0; y < COLS; y++) {
 		board.push([]);
 		state.push([]);

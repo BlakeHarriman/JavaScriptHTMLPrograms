@@ -17,7 +17,6 @@ var update = function() {
 	if (xv != 0 || yv != 0) {
 		firstPress = 0;
 	}
-	console.log(keyBuffer);
 	var key = keyBuffer.shift();
     if(key === 37){ //Left Arrow
 		//py--;
