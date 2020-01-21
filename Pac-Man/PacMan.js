@@ -6,6 +6,9 @@ var WALL = 0;
 var PELLET = 1;
 var PACMAN = 2;
 var playing = true;
+var pacman;
+speed = 2;
+
 px=26;
 py=13;
 gs=tc=20;
@@ -92,14 +95,14 @@ function inBounds(x, y) {
 var maze = {
 	canvas : document.createElement("canvas"),
 	start : function() {
-		canvas.width = 448;
-		canvas.height = 576;
-		context = canvas.getContext("2d");
+		this.canvas.width = 448;
+		this.canvas.height = 576;
+		this.context = this.canvas.getContext("2d");
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 	},
 	
 	clear: function() {
-		context.clearRect(0, 0, canvas.width, canvas.height);
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 }
 
@@ -110,117 +113,67 @@ function component(width, height, color, x, y, type) {
 	this.x = x;
 	this.y = y;
 	this.type = type;
-	this.speed = 1;
+	this.speed = speed;
 	this.angle = 0;
+	this.direction = 0;
 	this.update = function() {
-        ctx = canvas.context;
+        ctx = maze.context;
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
         ctx.fillStyle = color;
-        ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);        
+		if (type == "pac") {
+			ctx.strokeStyle = 'yellow';
+			ctx.beginPath();
+			ctx.arc(this.width / -2, this.height / -2, 4, 0, 2 * Math.PI);
+			ctx.fill();
+			ctx.stroke();
+		} else {
+			ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+		}		
         ctx.restore();    
     }
 	this.newPos = function() {
-        this.x += this.speed * Math.sin(this.angle);
-        this.y -= this.speed * Math.cos(this.angle);
+		if (this.direction == 0) {
+			this.x += this.speed * Math.sin(this.angle);
+			this.y -= this.speed * Math.cos(this.angle);
+		} else if (this.direction == 1) {
+			//tmp = this.speed;
+			//this.speed = tmp * 2
+			this.x += this.speed * Math.cos(this.angle);
+			this.y -= this.speed * Math.sin(this.angle);
+			//this.speed = tmp;
+			
+		}
     }
+}
+
+function drawWalls() {
+	ctx = maze.context;
+    //ctx.save();
+	ctx.fillStyle = "blue";
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				console.log("REKT");
+				ctx.fillRect(16 * j, 16 * i, 16, 16);
+			}
+		}
+	}
+
+
 }
 
 
 function init() {
-	pacman = new component (5, 5, "yellow", 26, 13, "pac");
-	blinky = new component (5, 5, "red", 16, 12, "ghost");
-	inky = new component (5, 5, "blue", 16, 13, "ghost");
-	pinky = new component (5, 5, "pink", 16, 14, "ghost");
-	clyde = new component (5, 5, "orange", 16, 15, "ghost");
+	pacman = new component (35, 35, "yellow", 240, 440, "pac");
+	//blinky = new component (5, 5, "red", 16, 12, "ghost");
+	//inky = new component (5, 5, "blue", 16, 13, "ghost");
+	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
+	//clyde = new component (5, 5, "orange", 16, 15, "ghost");
+	maze.start();
 }
 
-//Opens the block when it is clicked on
-
-function openBlock(x, y) {
-	if (!playing) {
-		return;
-	}
-	
-	if (state[y][x] == STATE_FLAGGED) { //If it is flagged then don't open it
-		return;
-	}
-	if (board[y][x] == BLOCK_MINE) { //If it is a mine then game over
-		alert('Game Over');
-		playing = false;
-		revealBoard(false);
-		document.getElementById("smiley").style.display = "none";
-		document.getElementById("dead").style.display = "block";
-		return;
-	}
-	
-	state[y][x] = STATE_OPENED;
-	if (board[y][x] == 0) {
-		for (var dx = -1; dx <= 1; dx++) {
-			for (var dy = -1; dy <= 1; dy++) {
-				var xx = x + dx,
-					yy = y + dy;
-				if (inBounds(xx, yy)) {
-					if (state[yy][xx] != STATE_OPENED) {
-						openBlock(xx, yy);
-					}
-				}
-			}
-		}
-	}
-	if (checkVictory()) { //check for victory
-		alert('You Win!');
-		revealBoard(true);
-		playing = false;
-		document.getElementById("smiley").style.display = "none";
-		document.getElementById("sunglass").style.display = "block";
-	}
-}
-
-//Determines if this block is the win condition
-function checkVictory() {
-	for (var y = 0; y < ROWS; y++) {
-		for (var x = 0; x < COLS; x++) {
-			if (board[y][x] != BLOCK_MINE) {
-				if (state[y][x] != STATE_OPENED) {
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-//flag the block
-
-function flagBlock(x, y) {
-	if (state[y][x] == STATE_OPENED) {
-		return;
-	}
-	state[y][x] = 1 - state[y][x];
-	if (state[y][x] == 1) {
-		FLAGS = FLAGS - 1;
-	} else if (state[y][x] == 0) {
-		FLAGS = FLAGS + 1;
-	}
-	document.getElementById("FLAGS").innerHTML = FLAGS;
-	
-}
-
-//reveals the board after victory or defeat has been determined
-
-function revealBoard(victorious) {
-	for (var y = 0; y < ROWS; y++) {
-		for (var x = 0; x < COLS; x++) {
-			if (board[y][x] == BLOCK_MINE && victorious) {
-				state[y][x] = STATE_FLAGGED;
-				continue;
-			}
-			state[y][x] = STATE_OPENED;
-		}
-	}
-}
 
 //This function exists to put all of the messy if statements into one method for generating the maze
 function inMap(x, y) {

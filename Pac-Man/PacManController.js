@@ -5,13 +5,14 @@ document.addEventListener("keydown", function(e) {
 	if (keyCode !== keyBuffer[keyBuffer.length-1]) {
 		keyBuffer = keyBuffer.slice(-3).concat(keyCode);
 	}
-	console.log(keyBuffer);
-	render();
+	//console.log(keyBuffer);
+	//render();
 	return false;
 });
 
 //Adds action listener
-canvas.addEventListener('contextmenu', function(e) {
+/*canvas.addEventListener('contextmenu', function(e) {
 	e.preventDefault();
 	return false;
 }, false);
+*/

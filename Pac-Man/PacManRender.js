@@ -2,50 +2,59 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-speed = 1;
+speed = 2;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
-var canvas = document.getElementById('canvas'),
-	ctx = canvas.getContext('2d');
+//var canvas = document.getElementById('canvas'),
+//	ctx = canvas.getContext('2d');
 	
 var colors = [
 		'blue', 'darkgreen', 'red', 'navyblue', 'darkgred', 'cyan', 'purple', 'black'
 		];
 
 var update = function() {
+	//console.log("HELLLLLLO");
 	if (xv != 0 || yv != 0) {
 		firstPress = 0;
 	}
 	var key = keyBuffer.shift();
     if(key === 37){ //Left Arrow
 		//py--;
-		if (map[px][py-1] != 0) {
+		pacman.speed = speed * -1;
+		pacman.direction = 1;
+		/*if (map[px][py-1] != 0) {
 			xv=0; yv=-1;
 		} else if (keyBuffer[0] != 39) {
 			keyBuffer.push(key);
-		}
+		}*/
 	} else if(key === 38){ //Up Arrow
 		//py--;
-		if (map[px-1][py] != 0) {
+		pacman.speed = speed;
+		pacman.direction = 0;
+		/*if (map[px-1][py] != 0) {
 			xv=-1; yv=0;
 		} else if (keyBuffer[0] != 40) {
 			keyBuffer.push(key);
-		}
+		}*/
 	} else if(key === 39){ //Right Arrow
 		//px++;
-		if(map[px][py+1] != 0) {
+		pacman.speed = speed;
+		pacman.direction = 1;
+		/*if(map[px][py+1] != 0) {
 			xv=0; yv=1;
 		} else if (keyBuffer[0] != 37) {
 			keyBuffer.push(key);
-		}
+		}*/
 	} else if(key === 40){ //Down Arrow
 		//py++;
-		if (map[px+1][py] != 0) {
+		pacman.speed = speed * -1;
+		pacman.direction = 0;
+		/*if (map[px+1][py] != 0) {
 			xv=1; yv=0;
 		} else if (keyBuffer[0] != 38) {
 			keyBuffer.push(key);
-		}
+		}*/
 	}
 	if (xv == 0 && yv == 0) {
 		keyBuffer.shift();
@@ -138,7 +147,15 @@ function render() {
 		}
 	}
 }
-
-render();
+function updateGame() {
+	maze.clear();
+	update();
+	drawWalls();
+	pacman.newPos();
+	pacman.update();
+}
+updateGame();
+setInterval(updateGame, 20);
+//render();
 log = 1;
-setInterval(render, 1000/15);
+//setInterval(render, 1000/15);
