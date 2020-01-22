@@ -2,7 +2,7 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-speed = 2;
+speed = 1;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
@@ -21,8 +21,10 @@ var update = function() {
 	var key = keyBuffer.shift();
     if(key === 37){ //Left Arrow
 		//py--;
-		pacman.speed = speed * -1;
-		pacman.direction = 1;
+		if (!pacman.willCollide(speed * -1, 1)) {
+			pacman.speed = speed * -1;
+			pacman.direction = 1;
+		}
 		/*if (map[px][py-1] != 0) {
 			xv=0; yv=-1;
 		} else if (keyBuffer[0] != 39) {
@@ -30,8 +32,10 @@ var update = function() {
 		}*/
 	} else if(key === 38){ //Up Arrow
 		//py--;
-		pacman.speed = speed;
-		pacman.direction = 0;
+		if (!pacman.willCollide(speed, 0)) {
+			pacman.speed = speed;
+			pacman.direction = 0;
+		}
 		/*if (map[px-1][py] != 0) {
 			xv=-1; yv=0;
 		} else if (keyBuffer[0] != 40) {
@@ -39,8 +43,10 @@ var update = function() {
 		}*/
 	} else if(key === 39){ //Right Arrow
 		//px++;
-		pacman.speed = speed;
-		pacman.direction = 1;
+		if (!pacman.willCollide(speed, 1)) {
+			pacman.speed = speed;
+			pacman.direction = 1;
+		}
 		/*if(map[px][py+1] != 0) {
 			xv=0; yv=1;
 		} else if (keyBuffer[0] != 37) {
@@ -48,8 +54,10 @@ var update = function() {
 		}*/
 	} else if(key === 40){ //Down Arrow
 		//py++;
-		pacman.speed = speed * -1;
-		pacman.direction = 0;
+		if (!pacman.willCollide(speed * -1, 0)) {
+			pacman.speed = speed * -1;
+			pacman.direction = 0;
+		}
 		/*if (map[px+1][py] != 0) {
 			xv=1; yv=0;
 		} else if (keyBuffer[0] != 38) {
@@ -151,11 +159,17 @@ function updateGame() {
 	maze.clear();
 	update();
 	drawWalls();
-	pacman.newPos();
+	drawTest();
+	if(!wallCollision()) {
+		pacman.newPos();
+	}
 	pacman.update();
+	ctx.fillStyle = "yellow";
+	ctx.fillRect(pacman.x - 25, pacman.y - 18, 2, 2);
+	ctx.fillRect(pacman.x - 18, pacman.y - 25, 2, 2);
 }
 updateGame();
-setInterval(updateGame, 20);
+setInterval(updateGame, 10);
 //render();
 log = 1;
 //setInterval(render, 1000/15);

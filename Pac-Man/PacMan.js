@@ -7,7 +7,7 @@ var PELLET = 1;
 var PACMAN = 2;
 var playing = true;
 var pacman;
-speed = 2;
+speed = 0;
 
 px=26;
 py=13;
@@ -125,9 +125,11 @@ function component(width, height, color, x, y, type) {
 		if (type == "pac") {
 			ctx.strokeStyle = 'yellow';
 			ctx.beginPath();
-			ctx.arc(this.width / -2, this.height / -2, 4, 0, 2 * Math.PI);
+			//ctx.arc(this.width / -2, this.height / -2, 7.5, 0, 2 * Math.PI);
 			ctx.fill();
 			ctx.stroke();
+			ctx.fillStyle = "green";
+			ctx.fillRect(this.width / -2 - 7.5, this.width / -2 - 7.5, 15, 15);
 		} else {
 			ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
 		}		
@@ -143,9 +145,42 @@ function component(width, height, color, x, y, type) {
 			this.x += this.speed * Math.cos(this.angle);
 			this.y -= this.speed * Math.sin(this.angle);
 			//this.speed = tmp;
-			
 		}
+		if (Math.round(this.x) - 25 == 0 || Math.round(this.x) == 460 || Math.round(this.y) - 25 == 0 || Math.round(this.y) == 576 + 10) {
+			pacman.speed = 0;
+		}
+		if (Math.round(this.x) == 448 - 5) {
+			//pacman.speed = 0;
+			//console.log("REKTTTTTT");
+		}
+		//console.log("X: " + this.x);
+		//console.log("Y: " + this.y);
     }
+	
+	this.willCollide = function(speed, direction) {
+		if (direction == 0) {
+			x = this.x + (speed * Math.sin(this.angle));
+			y = this.y - (speed * Math.cos(this.angle));
+		} else if (direction == 1) {
+			//tmp = this.speed;
+			//this.speed = tmp * 2
+			x = this.x + (speed * Math.cos(this.angle));
+			y = this.y - (speed * Math.sin(this.angle));
+			//this.speed = tmp;	
+		}
+		for (i = 0; i < ROWS; i++) {
+			for (j = 0; j < COLS; j++) {
+				if (map[i][j] == 0) {
+					if ((x - 8 == 16 * j || x + 8 == 16 * j) || (y - 8 == 16 * i || y + 8 == 16 * i)) {
+						return true;
+						//console.log("Collide");
+					}
+					//ctx.fillRect(16 * j, 16 * i, 16, 16);
+				}
+			}
+		}
+		return false;
+	}
 }
 
 function drawWalls() {
@@ -155,18 +190,42 @@ function drawWalls() {
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				console.log("REKT");
-				ctx.fillRect(16 * j, 16 * i, 16, 16);
+				ctx.fillStyle = "blue";
+				ctx.fillRect(16 * j, 16 * i, 15, 15);			
 			}
 		}
 	}
+}
 
+function drawTest() {
+	ctx.fillStyle = "red";
+	ctx.fillRect(448 - 15, 576 - 15, 15, 15);
+}
 
+function wallCollision() {
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				if ((pacman.x - 25 == 16 * j + 16 && pacman.y - 18 == 16 * i + 7) && (pacman.direction == 1)) {// || (pacman.x - 25 == 16 * j + 16 && pacman.y - 25 == 16 * i + 16)) {
+					return true;
+					//console.log("Collide");
+				} else if ((pacman.x - 18 == 16 * j + 8 && pacman.y - 25 == 16 * i +16) && (pacman.direction == 0)) {
+					return true;
+				}
+				ctx.fillStyle = "red";
+				ctx.fillRect(16 * j + 16, 16 * i + 8, 1, 1);
+				ctx.fillRect(16 * j + 8, 16 * i + 16, 1, 1);
+				//ctx.fillRect(16 * j + 16, 16 * i, 1, 1);
+				//ctx.fillRect(16 * j, 16 * i + 16, 1, 1);
+			}
+		}
+	}
+	return false;
 }
 
 
 function init() {
-	pacman = new component (35, 35, "yellow", 240, 440, "pac");
+	pacman = new component (35, 35, "yellow", 242, 441, "pac");
 	//blinky = new component (5, 5, "red", 16, 12, "ghost");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
 	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
