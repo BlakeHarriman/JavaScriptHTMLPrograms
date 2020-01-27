@@ -7,12 +7,13 @@ var PELLET = 1;
 var PACMAN = 2;
 var playing = true;
 var pacman;
-speed = 0;
 
 px=26;
 py=13;
 gs=tc=20;
-xv=0; yv=0;
+velocityX = 0;
+velocityY = 0;
+track = 1;
 
 //Maze
 var map = [
@@ -113,7 +114,8 @@ function component(width, height, color, x, y, type) {
 	this.x = x;
 	this.y = y;
 	this.type = type;
-	this.speed = speed;
+	this.velocityX = velocityX;
+	this.velocityY = velocityY;
 	this.angle = 0;
 	this.direction = 0;
 	this.update = function() {
@@ -137,17 +139,17 @@ function component(width, height, color, x, y, type) {
     }
 	this.newPos = function() {
 		if (this.direction == 0) {
-			this.x += this.speed * Math.sin(this.angle);
-			this.y -= this.speed * Math.cos(this.angle);
+			this.x += this.velocityX * Math.sin(this.angle);
+			this.y -= this.velocityY * Math.cos(this.angle);
 		} else if (this.direction == 1) {
 			//tmp = this.speed;
 			//this.speed = tmp * 2
-			this.x += this.speed * Math.cos(this.angle);
-			this.y -= this.speed * Math.sin(this.angle);
+			this.x += this.velocityX * Math.cos(this.angle);
+			this.y -= this.velocityY * Math.sin(this.angle);
 			//this.speed = tmp;
 		}
 		if (Math.round(this.x) - 25 == 0 || Math.round(this.x) == 460 || Math.round(this.y) - 25 == 0 || Math.round(this.y) == 576 + 10) {
-			pacman.speed = 0;
+			//pacman.speed = 0;
 		}
 		if (Math.round(this.x) == 448 - 5) {
 			//pacman.speed = 0;
@@ -157,15 +159,15 @@ function component(width, height, color, x, y, type) {
 		//console.log("Y: " + this.y);
     }
 	
-	this.willCollide = function(speed, direction) {
+	this.willCollide = function(velocityX, velocityY, direction) {
 		if (direction == 0) {
-			x = this.x + (speed * Math.sin(this.angle));
-			y = this.y - (speed * Math.cos(this.angle));
+			x = this.x + (velocityX * Math.sin(this.angle));
+			y = this.y - (velocityY * Math.cos(this.angle));
 		} else if (direction == 1) {
 			//tmp = this.speed;
 			//this.speed = tmp * 2
-			x = this.x + (speed * Math.cos(this.angle));
-			y = this.y - (speed * Math.sin(this.angle));
+			x = this.x + (velocityX * Math.cos(this.angle));
+			y = this.y - (velocityY * Math.sin(this.angle));
 			//this.speed = tmp;	
 		}
 		for (i = 0; i < ROWS; i++) {
@@ -202,19 +204,40 @@ function drawTest() {
 	ctx.fillRect(448 - 15, 576 - 15, 15, 15);
 }
 
+	//ctx.fillRect(pacman.x - 25, pacman.y - 25, 2, 2); //top left
+	//ctx.fillRect(pacman.x - 12, pacman.y - 25, 2, 2); //top right
+	//ctx.fillRect(pacman.x - 12, pacman.y - 12, 2, 2); //bottom right
+	//ctx.fillRect(pacman.x - 25, pacman.y - 12, 2, 2); //bottom left
+
+
+
 function wallCollision() {
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((pacman.x - 25 == 16 * j + 16 && pacman.y - 18 == 16 * i + 7) && (pacman.direction == 1)) {// || (pacman.x - 25 == 16 * j + 16 && pacman.y - 25 == 16 * i + 16)) {
-					return true;
+				if (16 * i == 416 || 16 * i + 1 == 417) {
+					ctx.fillStyle = "orange";
+					ctx.fillRect(16 * j, 16 * i, 2, 2);
+					ctx.fillRect(16 * j, 16 * i + 1, 2, 2);
+				}
+				if ((pacman.x - 25 == 16 * j + 16 && (pacman.y - 25 > 16 * i || pacman.y - 25 < 16 * i + 14)) && (pacman.direction == 1)) {// || (pacman.x - 25 == 16 * j + 16 && pacman.y - 25 == 16 * i + 16)) {
+					pacman.velocityX = 0;
+					if (track == 1) {
+						console.log("X: " + (pacman.x - 25));
+						console.log("Y: " + (pacman.y - 25));
+						console.log("J: " + (16 * j + 16));
+						console.log("I: " + (16 * i));
+						console.log("I 2: " + (16 * i + 14));
+						track = 0;
+					}
 					//console.log("Collide");
 				} else if ((pacman.x - 18 == 16 * j + 8 && pacman.y - 25 == 16 * i +16) && (pacman.direction == 0)) {
 					return true;
 				}
 				ctx.fillStyle = "red";
-				ctx.fillRect(16 * j + 16, 16 * i + 8, 1, 1);
-				ctx.fillRect(16 * j + 8, 16 * i + 16, 1, 1);
+				for (k = 0; k < 15; k++) {
+					//ctx.fillRect(16 * j + 15, 16 * i + k, 1, 1); //Right side of the blocks
+				}
 				//ctx.fillRect(16 * j + 16, 16 * i, 1, 1);
 				//ctx.fillRect(16 * j, 16 * i + 16, 1, 1);
 			}

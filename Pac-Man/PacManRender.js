@@ -2,7 +2,6 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-speed = 1;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
@@ -15,14 +14,12 @@ var colors = [
 
 var update = function() {
 	//console.log("HELLLLLLO");
-	if (xv != 0 || yv != 0) {
-		firstPress = 0;
-	}
 	var key = keyBuffer.shift();
     if(key === 37){ //Left Arrow
 		//py--;
-		if (!pacman.willCollide(speed * -1, 1)) {
-			pacman.speed = speed * -1;
+		if (!pacman.willCollide(-1, 0, 1)) {
+			pacman.velocityX = -1;
+			pacman.velocityY = 0;
 			pacman.direction = 1;
 		}
 		/*if (map[px][py-1] != 0) {
@@ -32,8 +29,9 @@ var update = function() {
 		}*/
 	} else if(key === 38){ //Up Arrow
 		//py--;
-		if (!pacman.willCollide(speed, 0)) {
-			pacman.speed = speed;
+		if (!pacman.willCollide(0, 1, 0)) {
+			pacman.velocityX = 0;
+			pacman.velocityY = 1;
 			pacman.direction = 0;
 		}
 		/*if (map[px-1][py] != 0) {
@@ -43,8 +41,9 @@ var update = function() {
 		}*/
 	} else if(key === 39){ //Right Arrow
 		//px++;
-		if (!pacman.willCollide(speed, 1)) {
-			pacman.speed = speed;
+		if (!pacman.willCollide(1, 0, 1)) {
+			pacman.velocityX = 1;
+			pacman.velocityY = 0;
 			pacman.direction = 1;
 		}
 		/*if(map[px][py+1] != 0) {
@@ -54,8 +53,9 @@ var update = function() {
 		}*/
 	} else if(key === 40){ //Down Arrow
 		//py++;
-		if (!pacman.willCollide(speed * -1, 0)) {
-			pacman.speed = speed * -1;
+		if (!pacman.willCollide(0, -1, 0)) {
+			pacman.velocityX = 0;
+			pacman.velocityY = -1;
 			pacman.direction = 0;
 		}
 		/*if (map[px+1][py] != 0) {
@@ -63,9 +63,6 @@ var update = function() {
 		} else if (keyBuffer[0] != 38) {
 			keyBuffer.push(key);
 		}*/
-	}
-	if (xv == 0 && yv == 0) {
-		keyBuffer.shift();
 	}
 }	
 
@@ -160,13 +157,14 @@ function updateGame() {
 	update();
 	drawWalls();
 	drawTest();
-	if(!wallCollision()) {
-		pacman.newPos();
-	}
+	wallCollision();
+	pacman.newPos();
 	pacman.update();
 	ctx.fillStyle = "yellow";
-	ctx.fillRect(pacman.x - 25, pacman.y - 18, 2, 2);
-	ctx.fillRect(pacman.x - 18, pacman.y - 25, 2, 2);
+	ctx.fillRect(pacman.x - 25, pacman.y - 25, 2, 2); //top left
+	//ctx.fillRect(pacman.x - 12, pacman.y - 25, 2, 2); //top right
+	//ctx.fillRect(pacman.x - 12, pacman.y - 12, 2, 2); //bottom right
+	//ctx.fillRect(pacman.x - 25, pacman.y - 12, 2, 2); //bottom left
 }
 updateGame();
 setInterval(updateGame, 10);
