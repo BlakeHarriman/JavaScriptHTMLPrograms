@@ -7,6 +7,7 @@ var PELLET = 1;
 var PACMAN = 2;
 var playing = true;
 var pacman;
+var keyPress = 0;
 
 px=26;
 py=13;
@@ -159,27 +160,28 @@ function component(width, height, color, x, y, type) {
 		//console.log("Y: " + this.y);
     }
 	
-	this.willCollide = function(velocityX, velocityY, direction) {
+	this.willCollide = function(velocityX, velocityY, direction, keyPress) {
 		if (direction == 0) {
 			x = this.x + (velocityX * Math.sin(this.angle));
 			y = this.y - (velocityY * Math.cos(this.angle));
+			if (keyPress == 3) {
+				y -= 3;
+			} else if (keyPress == 4) {
+				y += 3;
+			}
 		} else if (direction == 1) {
-			//tmp = this.speed;
-			//this.speed = tmp * 2
 			x = this.x + (velocityX * Math.cos(this.angle));
 			y = this.y - (velocityY * Math.sin(this.angle));
-			//this.speed = tmp;	
-		}
-		for (i = 0; i < ROWS; i++) {
-			for (j = 0; j < COLS; j++) {
-				if (map[i][j] == 0) {
-					if ((x - 8 == 16 * j || x + 8 == 16 * j) || (y - 8 == 16 * i || y + 8 == 16 * i)) {
-						return true;
-						//console.log("Collide");
-					}
-					//ctx.fillRect(16 * j, 16 * i, 16, 16);
-				}
+			if (keyPress == 1) {
+				x += 1;
+			} else if (keyPress == 2) {
+				x -= 1;
 			}
+		}
+		console.log("Next X: " + (x - 12));
+		console.log("Next Y: " + (y - 25));
+		if (isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction)) {
+			return true;
 		}
 		return false;
 	}
@@ -209,41 +211,113 @@ function drawTest() {
 	//ctx.fillRect(pacman.x - 12, pacman.y - 12, 2, 2); //bottom right
 	//ctx.fillRect(pacman.x - 25, pacman.y - 12, 2, 2); //bottom left
 
-
-
-function wallCollision() {
+function isTouchingLeft(x, y, direction) { //Pacman touching left side of a wall
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if (16 * i == 416 || 16 * i + 1 == 417) {
-					ctx.fillStyle = "orange";
-					ctx.fillRect(16 * j, 16 * i, 2, 2);
-					ctx.fillRect(16 * j, 16 * i + 1, 2, 2);
-				}
-				if ((pacman.x - 25 == 16 * j + 16 && (pacman.y - 25 > 16 * i || pacman.y - 25 < 16 * i + 14)) && (pacman.direction == 1)) {// || (pacman.x - 25 == 16 * j + 16 && pacman.y - 25 == 16 * i + 16)) {
-					pacman.velocityX = 0;
+				if ((x - 12 == 16 * j - 3 && (((y - 25 >= 16 * i) && (y - 25 <= 16 * i + 15)) || ((y - 12 >= 16 * i) && (y - 12 <= 16 * i + 15))) && (direction == 1))) {
+					return true;
 					if (track == 1) {
-						console.log("X: " + (pacman.x - 25));
-						console.log("Y: " + (pacman.y - 25));
-						console.log("J: " + (16 * j + 16));
-						console.log("I: " + (16 * i));
-						console.log("I 2: " + (16 * i + 14));
+						console.log("X: " + (x - 12));
+						console.log("Y: " + (y - 25));
+						console.log("J: " + (16 * j - 3));
+						console.log("I 1: " + (16 * i + 1));
+						console.log("I 2: " + (16 * i + 15));
 						track = 0;
 					}
-					//console.log("Collide");
-				} else if ((pacman.x - 18 == 16 * j + 8 && pacman.y - 25 == 16 * i +16) && (pacman.direction == 0)) {
-					return true;
 				}
 				ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
-					//ctx.fillRect(16 * j + 15, 16 * i + k, 1, 1); //Right side of the blocks
+					//ctx.fillRect(16 * j, 16 * i + k, 1, 1);
 				}
-				//ctx.fillRect(16 * j + 16, 16 * i, 1, 1);
-				//ctx.fillRect(16 * j, 16 * i + 16, 1, 1);
 			}
 		}
 	}
 	return false;
+}
+
+function isTouchingRight(x, y, direction) { //Pacman touching right side of a wall
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				if ((x - 25 == 16 * j + 16 && (((y - 25 >= 16 * i) && (y - 25 <= 16 * i + 15)) || ((y - 12 >= 16 * i) && (y - 12 <= 16 * i + 15)))) && (direction == 1)) {
+					return true;
+					if (track == 1) {
+						console.log("X: " + (x - 25));
+						console.log("Y: " + (y - 25));
+						console.log("J: " + (16 * j + 16));
+						console.log("I 1: " + (16 * i));
+						console.log("I 2: " + (16 * i + 15));
+						track = 0;
+					}
+				}
+				ctx.fillStyle = "red";
+				for (k = 0; k < 15; k++) {
+					//ctx.fillRect(16 * j + 15, 16 * i + k, 1, 1);
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function isTouchingTop(x, y, direction) { //Pacman touching top side of a wall
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				if ((y - 12 == 16 * i - 3 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
+					//return true;
+					if (track == 1) {
+						console.log("X: " + (x - 25));
+						console.log("Y: " + (y - 25));
+						console.log("J: " + (16 * j + 16));
+						console.log("I 1: " + (16 * i));
+						console.log("I 2: " + (16 * i + 15));
+						track = 0;
+					}
+					return true;
+				}
+				ctx.fillStyle = "red";
+				for (k = 0; k < 15; k++) {
+					//ctx.fillRect(16 * j + k, 16 * i, 1, 1);
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function isTouchingBottom(x, y, direction) { //Pacman touching bottom side of a wall
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				if ((y - 25 == 16 * i + 16 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
+					return true;
+					if (track == 1) {
+						console.log("X: " + (x - 25));
+						console.log("Y: " + (y - 25));
+						console.log("J: " + (16 * j + 16));
+						console.log("I 1: " + (16 * i));
+						console.log("I 2: " + (16 * i + 15));
+						track = 0;
+					}
+				}
+				ctx.fillStyle = "red";
+				for (k = 0; k < 15; k++) {
+					//ctx.fillRect(16 * j + k, 16 * i + 15, 1, 1);
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function wallCollision() {
+	if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction) && (keyPress == 2)) || (isTouchingRight(pacman.x, pacman.y, pacman.direction) && keyPress == 1)) {
+		pacman.velocityX = 0;
+	} else if ((isTouchingTop(pacman.x, pacman.y, pacman.direction) && (keyPress == 4)) || (isTouchingBottom(pacman.x, pacman.y, pacman.direction) && (keyPress == 3))) {
+		pacman.velocityY = 0;
+	}
 }
 
 
@@ -256,68 +330,4 @@ function init() {
 	maze.start();
 }
 
-
-//This function exists to put all of the messy if statements into one method for generating the maze
-function inMap(x, y) {
-	if (x == 3 || x == 33) {
-		return true;
-	}
-	if ((y == 0 || y == 27) && ((x > 2 && x < 13) || (x == 16) || (x == 18) || (x > 21 && x < 34))) {
-		return true;
-	}
-	if ((y == 1 || y == 26) && ((x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 27) || (x == 28))) {
-		return true;
-	}
-	if ((y == 2 || y == 25) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 24) || (x == 25) || (x == 27) || (x == 28) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 3 || y == 24) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x == 24) || (x == 25) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 4 || y == 23) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 16) || (x == 18) || (x == 22) || (x > 23 && x < 29) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 5 || y == 22) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x > 11 && x < 17) || (x > 17 && x < 23) || (x > 23 && x < 29) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 6 || y == 21) && ((x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 7 || y == 20) && ((x > 4 && x < 8) || (x > 8 && x < 17) || (x > 17 && x < 23) || (x == 24) || (x == 25) || (x > 26 && x < 32))) {
-		return true;
-	}
-	if ((y == 8 || y == 19) && ((x == 5) || (x == 7) || (x > 8 && x < 17) || (x > 17 && x < 23) || (x == 24) || (x == 25) || (x > 26 && x < 32))) {
-		return true;
-	}
-	if ((y == 9 || y == 18) && ((x == 5) || (x == 7) || (x == 12) || (x == 13) || (x == 24) || (x == 25) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 10 || y == 17) && ((x == 5) || (x == 7) || (x == 9) || (x == 10) || (x == 12) || (x == 13) || (x > 14 && x < 20) || (x == 21) || (x == 22) || (x == 24) || (x == 25) || (x == 27) || (x == 28) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 11 || y == 16) && ((x > 4 && x < 8) || (x == 9) || (x == 10) || (x == 12) || (x == 13) || (x == 15) || (x == 19) || (x == 21) || (x == 22) || (x == 24) || (x == 25) || (x == 27) || (x == 28) || (x == 30) || (x == 31))) {
-		return true;
-	}
-	if ((y == 12 || y == 15) && ((x == 9) || (x == 10) || (x == 15) || (x == 19) || (x == 21) || (x == 22) || (x == 27) || (x == 28))) {
-		return true;
-	}
-	if ((y == 13 || y == 14) && ((x > 3 && x < 8) || (x > 8 && x < 14) || (x == 15) || (x == 19) || (x > 20 && x < 26) || (x > 26 && x < 32))) {
-		return true;
-	}
-}
-
-function isBlank(x, y) {
-	if (x == 0 || x == 1 || x == 2 || x == 35 || x == 34) {
-		return true;
-	}
-	if (((y > -1 && y < 5) || (y > 22 && y < 28)) && ((x > 12 && x < 16) || (x > 18 && x < 22))) {
-		return true;
-	}
-	if ((x == 6) && ((y == 3) || (y == 4) || (y == 8) || (y == 9) || (y == 10) || (y == 17) || (y == 18) || (y == 19) || (y == 23) || (y == 24))) {
-		return true;
-	}
-	if (((x == 16) ||(x == 17) || (x == 18)) && ((y > 10 && y < 17))) {
-		return true;
-	}
-}
 init();
