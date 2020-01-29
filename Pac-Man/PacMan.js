@@ -161,13 +161,14 @@ function component(width, height, color, x, y, type) {
     }
 	
 	this.willCollide = function(velocityX, velocityY, direction, keyPress) {
+		track = 1;
 		if (direction == 0) {
 			x = this.x + (velocityX * Math.sin(this.angle));
 			y = this.y - (velocityY * Math.cos(this.angle));
 			if (keyPress == 3) {
-				y -= 3;
+				y += 1;
 			} else if (keyPress == 4) {
-				y += 3;
+				y -= 1;
 			}
 		} else if (direction == 1) {
 			x = this.x + (velocityX * Math.cos(this.angle));
@@ -178,9 +179,9 @@ function component(width, height, color, x, y, type) {
 				x -= 1;
 			}
 		}
-		console.log("Next X: " + (x - 12));
+		console.log("Next X: " + (x - 25));
 		console.log("Next Y: " + (y - 25));
-		if (isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction) || isTouchingLeft(x, y, direction)) {
+		if (isTouchingLeft(x, y, direction) || isTouchingRight(x, y, direction) || isTouchingTop(x, y, direction) || isTouchingBottom(x, y, direction)) {
 			return true;
 		}
 		return false;
@@ -265,14 +266,14 @@ function isTouchingTop(x, y, direction) { //Pacman touching top side of a wall
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((y - 12 == 16 * i - 3 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
+				if ((y - 12 == 16 * i - 2 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
 					//return true;
 					if (track == 1) {
 						console.log("X: " + (x - 25));
-						console.log("Y: " + (y - 25));
-						console.log("J: " + (16 * j + 16));
-						console.log("I 1: " + (16 * i));
-						console.log("I 2: " + (16 * i + 15));
+						console.log("Y: " + (y - 12));
+						console.log("I: " + (16 * i - 2));
+						console.log("J 1: " + (16 * j));
+						console.log("J 2: " + (16 * i + 15));
 						track = 0;
 					}
 					return true;
@@ -292,15 +293,16 @@ function isTouchingBottom(x, y, direction) { //Pacman touching bottom side of a 
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
 				if ((y - 25 == 16 * i + 16 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
-					return true;
 					if (track == 1) {
 						console.log("X: " + (x - 25));
 						console.log("Y: " + (y - 25));
-						console.log("J: " + (16 * j + 16));
-						console.log("I 1: " + (16 * i));
-						console.log("I 2: " + (16 * i + 15));
+						console.log("I: " + (16 * i + 16));
+						console.log("J 1: " + (16 * j));
+						console.log("J 2: " + (16 * j + 15));
+						console.log("IS TOUCHING BOTTOM");
 						track = 0;
 					}
+					return true;
 				}
 				ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
