@@ -9,6 +9,7 @@ var playing = true;
 var pacman;
 var keyPress = 0;
 var touching = 0;
+var blinking = 0;
 var topLeftTouching = false;
 var topRightTouching = false;
 var bottomLeftTouching = false;
@@ -191,7 +192,7 @@ function drawMap() {
 				ctx.arc(16 * j + 8, 16 * i + 8, 2, 0, 2 * Math.PI);
 				ctx.fill();
 				ctx.stroke();
-			} else if (map[i][j] == 2) {
+			} else if (map[i][j] == 2 && blinking <= 50) {
 				ctx.strokeStyle = "#FFC0CB";
 				ctx.fillStyle = "#FFC0CB";
 				ctx.beginPath();
@@ -200,6 +201,10 @@ function drawMap() {
 				ctx.stroke();
 			}
 		}
+	}
+	blinking++
+	if (blinking == 100) {
+		blinking = 0;
 	}
 	track = 0;
 }
