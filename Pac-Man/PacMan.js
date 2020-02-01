@@ -8,6 +8,11 @@ var PACMAN = 2;
 var playing = true;
 var pacman;
 var keyPress = 0;
+var touching = 0;
+var topLeftTouching = false;
+var topRightTouching = false;
+var bottomLeftTouching = false;
+var bottomRightTouching = false;
 
 px=26;
 py=13;
@@ -24,7 +29,7 @@ var map = [
 		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		[0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
 		[0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-		[0,1,0,-1,-1,0,1,0,-1,-1,-1,0,1,0,0,1,0,-1,-1,-1,0,1,0,-1,-1,0,1,0],
+		[0,2,0,-1,-1,0,1,0,-1,-1,-1,0,1,0,0,1,0,-1,-1,-1,0,1,0,-1,-1,0,2,0],
 		[0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
 		[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
 		[0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0],
@@ -44,7 +49,7 @@ var map = [
 		[0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0],
 		[0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
 		[0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0],
-		[0,1,1,1,0,0,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,0,0,1,1,1,0],
+		[0,2,1,1,0,0,1,1,1,1,1,1,1,-1,-1,1,1,1,1,1,1,1,0,0,1,1,2,0],
 		[0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0],
 		[0,0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0,0],
 		[0,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,1,1,0],
@@ -61,38 +66,6 @@ var map = [
 function inBounds(x, y) {
 	return x >= 0 && y >= 0 && x < COLS && y < ROWS;
 }
-
-//Initializes the board and state to empty and closed state
-
-/*function init() {
-	for (var y = 0; y < COLS; y++) {
-		board.push([]);
-		state.push([]);
-		for (var x = 0; x < ROWS; x++) {
-			if (inMap(x, y)) {
-				board[y].push(0);
-				state[y].push(WALL);
-			} else if (x == px && y == py) {
-				board[y].push(2);
-				state[y].push(PACMAN);
-			} else if (isBlank(x, y)) {
-				board[y].push(-1);
-				state[y].push(BLANK);
-			} else {
-				board[y].push(1);
-				state[y].push(PELLET);
-			}
-		}
-	}
-	for (var y = 0; y < COLS; y++) {
-		for (var x = 0; x < ROWS; x++) {
-			console.log("X: " + x);
-			console.log("Y: " + y);
-			console.log("STATE: " + state[y][x]);
-		}
-	}
-	console.log("EAFASDLFKJASDLFKJASDFLJASDFSDJF");
-}*/
 
 var maze = {
 	canvas : document.createElement("canvas"),
@@ -128,14 +101,16 @@ function component(width, height, color, x, y, type) {
 		if (type == "pac") {
 			ctx.strokeStyle = 'yellow';
 			ctx.beginPath();
-			//ctx.arc(this.width / -2, this.height / -2, 7.5, 0, 2 * Math.PI);
+			ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
+			//console.log("WIDTH: " + this.width / -2);
+			//console.log("HEIGHT: " + this.height / -2);
 			ctx.fill();
 			ctx.stroke();
-			ctx.fillStyle = "green";
-			ctx.fillRect(this.width / -2 - 7.5, this.width / -2 - 7.5, 15, 15);
+			//ctx.fillStyle = "green";
+			//ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
 		} else {
 			ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
-		}		
+		}
         ctx.restore();    
     }
 	this.newPos = function() {
@@ -149,62 +124,84 @@ function component(width, height, color, x, y, type) {
 			this.y -= this.velocityY * Math.sin(this.angle);
 			//this.speed = tmp;
 		}
-		if (Math.round(this.x) - 25 == 0 || Math.round(this.x) == 460 || Math.round(this.y) - 25 == 0 || Math.round(this.y) == 576 + 10) {
-			//pacman.speed = 0;
-		}
-		if (Math.round(this.x) == 448 - 5) {
-			//pacman.speed = 0;
-			//console.log("REKTTTTTT");
-		}
 		//console.log("X: " + this.x);
 		//console.log("Y: " + this.y);
     }
 	
 	this.willCollide = function(velocityX, velocityY, direction, keyPress) {
-		track = 1;
+		//track = 1;
 		if (direction == 0) {
-			x = this.x + (velocityX * Math.sin(this.angle));
-			y = this.y - (velocityY * Math.cos(this.angle));
-			if (keyPress == 3) {
+			x = pacman.x + (velocityX * Math.sin(this.angle));
+			y = pacman.y - (velocityY * Math.cos(this.angle));
+			/*if (keyPress == 3) {
 				y += 1;
 			} else if (keyPress == 4) {
 				y -= 1;
-			}
+			}*/
 		} else if (direction == 1) {
-			x = this.x + (velocityX * Math.cos(this.angle));
-			y = this.y - (velocityY * Math.sin(this.angle));
-			if (keyPress == 1) {
+			x = pacman.x + (velocityX * Math.cos(this.angle));
+			y = pacman.y - (velocityY * Math.sin(this.angle));
+			/*if (keyPress == 1) {
 				x += 1;
 			} else if (keyPress == 2) {
 				x -= 1;
-			}
+			}*/
 		}
-		console.log("Next X: " + (x - 25));
-		console.log("Next Y: " + (y - 25));
-		if (isTouchingLeft(x, y, direction) || isTouchingRight(x, y, direction) || isTouchingTop(x, y, direction) || isTouchingBottom(x, y, direction)) {
+		//console.log("Next X: " + (x));
+		//console.log("Next Y: " + (y));
+		touching = 0;
+		if (isMakingContact(x, y, direction) >= 2) {
+			console.log("HURRAY");
 			return true;
 		}
+		/*
+		if (isTouchingLeft(x, y, direction)) {
+			console.log("LEFT NICE");
+		}
+		if (isTouchingRight(x, y, direction)) {
+			console.log("RIGHT NICE");
+		}
+		if (isTouchingTop(x, y, direction)) {
+			console.log("TOP NICE");
+		}
+		if (isTouchingBottom(x, y, direction)) {
+			console.log("BOTTOM NICE");
+		}
+		if ((isTouchingLeft(x, y, direction)) && (isTouchingRight(x, y, direction)) && (isTouchingTop(x, y, direction)) && (isTouchingBottom(x, y, direction))) {
+			//console.log("NICE");
+			return true;
+		}*/
 		return false;
 	}
 }
 
-function drawWalls() {
+function drawMap() {
 	ctx = maze.context;
     //ctx.save();
 	ctx.fillStyle = "blue";
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
-			if (map[i][j] == 0) {
+			if (map[i][j] == 0) { //Walls
 				ctx.fillStyle = "blue";
-				ctx.fillRect(16 * j, 16 * i, 15, 15);			
+				ctx.fillRect(16 * j, 16 * i, 15, 15);
+			} else if (map[i][j] == 1) { //Pellets
+				ctx.strokeStyle = "#FFDAB9";
+				ctx.fillStyle = "#FFDAB9";
+				ctx.beginPath();
+				ctx.arc(16 * j + 8, 16 * i + 8, 2, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.stroke();
+			} else if (map[i][j] == 2) {
+				ctx.strokeStyle = "#FFC0CB";
+				ctx.fillStyle = "#FFC0CB";
+				ctx.beginPath();
+				ctx.arc(16 * j + 8, 16 * i + 8, 4, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.stroke();
 			}
 		}
 	}
-}
-
-function drawTest() {
-	ctx.fillStyle = "red";
-	ctx.fillRect(448 - 15, 576 - 15, 15, 15);
+	track = 0;
 }
 
 	//ctx.fillRect(pacman.x - 25, pacman.y - 25, 2, 2); //top left
@@ -216,16 +213,18 @@ function isTouchingLeft(x, y, direction) { //Pacman touching left side of a wall
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((x - 12 == 16 * j - 3 && (((y - 25 >= 16 * i) && (y - 25 <= 16 * i + 15)) || ((y - 12 >= 16 * i) && (y - 12 <= 16 * i + 15))) && (direction == 1))) {
-					return true;
+				if ((x == 16 * j && ((y - 8 >= 16 * i) && (y - 8 <= 16 * i + 16)))) {
 					if (track == 1) {
-						console.log("X: " + (x - 12));
-						console.log("Y: " + (y - 25));
-						console.log("J: " + (16 * j - 3));
-						console.log("I 1: " + (16 * i + 1));
-						console.log("I 2: " + (16 * i + 15));
+						console.log("X: " + (x));
+						console.log("Y: " + (y));
+						console.log("J: " + (16 * j));
+						console.log("I 1: " + (16 * i));
+						console.log("I 2: " + (16 * i + 16));
+						console.log("IS TOUCHING LEFT");
 						track = 0;
 					}
+					//console.log("IS TOUCHING LEFT");
+					return true;
 				}
 				ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
@@ -241,16 +240,18 @@ function isTouchingRight(x, y, direction) { //Pacman touching right side of a wa
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((x - 25 == 16 * j + 16 && (((y - 25 >= 16 * i) && (y - 25 <= 16 * i + 15)) || ((y - 12 >= 16 * i) && (y - 12 <= 16 * i + 15)))) && (direction == 1)) {
-					return true;
+				if ((x - 16 == 16 * j + 16 && ((y - 8 >= 16 * i) && (y - 8 <= 16 * i + 16)))) {
 					if (track == 1) {
 						console.log("X: " + (x - 25));
 						console.log("Y: " + (y - 25));
 						console.log("J: " + (16 * j + 16));
 						console.log("I 1: " + (16 * i));
 						console.log("I 2: " + (16 * i + 15));
+						//console.log("IS TOUCHING RIGHT");
 						track = 0;
 					}
+					//console.log("IS TOUCHING RIGHT");
+					return true;
 				}
 				ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
@@ -266,16 +267,18 @@ function isTouchingTop(x, y, direction) { //Pacman touching top side of a wall
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((y - 12 == 16 * i - 2 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
+				if ((y == 16 * i && ((x - 8 >= 16 * j) && (x - 8 <= 16 * j + 16)))) {
 					//return true;
 					if (track == 1) {
-						console.log("X: " + (x - 25));
-						console.log("Y: " + (y - 12));
+						console.log("X: " + (x));
+						console.log("Y: " + (y));
 						console.log("I: " + (16 * i - 2));
 						console.log("J 1: " + (16 * j));
 						console.log("J 2: " + (16 * i + 15));
+						//console.log("IS TOUCHING TOP");
 						track = 0;
 					}
+					//console.log("IS TOUCHING TOP");
 					return true;
 				}
 				ctx.fillStyle = "red";
@@ -292,16 +295,17 @@ function isTouchingBottom(x, y, direction) { //Pacman touching bottom side of a 
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 0) {
-				if ((y - 25 == 16 * i + 16 && (((x - 25 >= 16 * j) && (x - 25 <= 16 * j + 15)) || ((x - 12 >= 16 * j) && (x - 12 <= 16 * j + 15)))) && (direction == 0)) {
+				if ((y - 16 == 16 * i + 16 && ((x - 8 >= 16 * j) && (x - 8 <= 16 * j + 16)))) {
 					if (track == 1) {
 						console.log("X: " + (x - 25));
 						console.log("Y: " + (y - 25));
 						console.log("I: " + (16 * i + 16));
 						console.log("J 1: " + (16 * j));
 						console.log("J 2: " + (16 * j + 15));
-						console.log("IS TOUCHING BOTTOM");
+						//console.log("IS TOUCHING BOTTOM");
 						track = 0;
 					}
+					//console.log("IS TOUCHING BOTTOM");
 					return true;
 				}
 				ctx.fillStyle = "red";
@@ -314,17 +318,117 @@ function isTouchingBottom(x, y, direction) { //Pacman touching bottom side of a 
 	return false;
 }
 
+function isMakingContact(x, y, direction) {
+	//console.log("TOUCHING: " + touching);
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 0) {
+				if ((y - 16 == 16 * i + 16 && ((x >= 16 * j) && (x <= 16 * j + 16))) || (x == 16 * j && ((y - 16 >= 16 * i) && (y - 16 <= 16 * i + 16)))) {
+					//Top right is touching
+					//touching++;
+					topRightTouching = true;
+				}
+				if ((y - 16 == 16 * i + 16 && ((x - 16 >= 16 * j) && (x - 16 <= 16 * j +16))) || (x - 16 == 16 * j + 16 && ((y - 16 >= 16 * i) && (y - 16 <= 16 * i + 16)))) {
+					//Top left is touching
+					//touching++;
+					topLeftTouching = true;
+				}
+				if ((y == 16 * i && ((x - 16 >= 16 * j) && (x - 16 <= 16 * j + 16))) || (x - 16 == 16 * j + 16 && ((y >= 16 * i) && (y <= 16 * i + 16)))) {
+					//Bottom Left is touching
+					//touching++;
+					bottomLeftTouching = true;
+				}
+				if ((y == 16 * i && ((x >= 16 * j) && (x <= 16 * j + 16))) || (x == 16 * j && ((y >= 16 * i) && (y <= 16 * i + 16)))) {
+					//Bottom Right is touching
+					//touching++;
+					bottomRightTouching = true;
+				}
+			}
+		}
+	}
+	if (topRightTouching) {
+		touching++;
+	}
+	if (topLeftTouching) {
+		touching++;
+	}
+	if (bottomLeftTouching) {
+		touching++;
+	}
+	if (bottomRightTouching) {
+		touching++;
+	}
+	//console.log("TOUCHING NOW: " + touching);
+	topLeftTouching = false;
+	topRightTouching = false;
+	bottomLeftTouching = false;
+	bottomRightTouching = false;
+	return touching;
+	/*if (touching == 4) {
+		return true;
+	}
+	return false;*/
+}
+
 function wallCollision() {
+	/*if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction)) && (isTouchingRight(pacman.x, pacman.y, pacman.direction)) && (isTouchingTop(pacman.x, pacman.y, pacman.direction)) && (isTouchingRight(pacman.x, pacman.y, pacman.direction))) {
+		//console.log("CURRENTLY COLLIDING");
+	}*/
 	if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction) && (keyPress == 2)) || (isTouchingRight(pacman.x, pacman.y, pacman.direction) && keyPress == 1)) {
 		pacman.velocityX = 0;
 	} else if ((isTouchingTop(pacman.x, pacman.y, pacman.direction) && (keyPress == 4)) || (isTouchingBottom(pacman.x, pacman.y, pacman.direction) && (keyPress == 3))) {
 		pacman.velocityY = 0;
 	}
+	if (isMakingContact(pacman.x, pacman.y, pacman.direction) == 4) {
+		//console.log("IS MAKING CONTACT");
+	}
+}
+
+function pelletCollision(x, y, direction) {
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (map[i][j] == 1 || map[i][j] == 2) {
+				if ((y - 16 == 16 * i + 8) && (x - 8 == 16 * j + 8)) {
+					if (map[i][j] == 2) {
+						//Make ghosts frightened
+					}
+					map[i][j] = -1;
+				}
+				if ((y == 16 * i + 8) && (x - 8 == 16 * j + 8)) {
+					if (map[i][j] == 2) {
+						//Make ghosts frightened
+					}
+					map[i][j] = -1;
+				}
+				if ((x - 16 == 16 * j + 8) && (y - 8 == 16 * i + 8)) {
+					if (map[i][j] == 2) {
+						//Make ghosts frightened
+					}
+					map[i][j] = -1;
+				}
+				if ((x == 16 * j + 8) && (y - 8 == 16 * i + 8)) {
+					if (map[i][j] == 2) {
+						//Make ghosts frightened
+					}
+					map[i][j] = -1;
+				}
+			}
+		}
+	}
+}
+
+function teleport() {
+	if (pacman.x == 0 && pacman.y - 16 == 272 && keyPress == 1) {
+		pacman.x = 480;
+	}
+	if (pacman.x == 480 && pacman.y - 16 == 272 && keyPress == 2) {
+		pacman.x = 0;
+	}
 }
 
 
 function init() {
-	pacman = new component (35, 35, "yellow", 242, 441, "pac");
+	pacman = new component (35, 35, "yellow", 233, 432, "pac");
 	//blinky = new component (5, 5, "red", 16, 12, "ghost");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
 	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
