@@ -10,6 +10,9 @@ var pacman;
 var keyPress = 0;
 var touching = 0;
 var blinking = 0;
+var score = 0;
+var lives = 3;
+var oneUp = 0;
 var topLeftTouching = false;
 var topRightTouching = false;
 var bottomLeftTouching = false;
@@ -207,13 +210,25 @@ function drawMap() {
 		blinking = 0;
 	}
 	track = 0;
+	
+	//Draw UI Elements
+	//Score
 	ctx.fillStyle = "white";
 	ctx.font = "20px Arial";
 	ctx.fillText("1UP", 50, 20);
 	ctx.fillText("HIGH", 150, 20);
 	ctx.fillText("SCORE", 240, 20);
-	ctx.fillText("00", 80, 40);
-	ctx.fillText("00", 260, 40);
+	ctx.fillText(score, 80, 40);
+	ctx.fillText(score, 260, 40);
+	//Lives
+	for(i = 0; i < lives - 1; i++) {
+		ctx.strokeStyle = "yellow";
+		ctx.fillStyle = "yellow";
+		ctx.beginPath();
+		ctx.arc(50 + 20 * i, 560, 6, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.stroke();
+	}
 }
 
 	//ctx.fillRect(pacman.x - 25, pacman.y - 25, 2, 2); //top left
@@ -400,29 +415,21 @@ function pelletCollision(x, y, direction) {
 	for (i = 0; i < ROWS; i++) {
 		for (j = 0; j < COLS; j++) {
 			if (map[i][j] == 1 || map[i][j] == 2) {
-				if ((y - 16 == 16 * i + 8) && (x - 8 == 16 * j + 8)) {
+				if (((y - 16 == 16 * i + 8) && (x - 8 == 16 * j + 8)) || ((y == 16 * i + 8) && (x - 8 == 16 * j + 8)) ||
+					((x - 16 == 16 * j + 8) && (y - 8 == 16 * i + 8)) || ((x == 16 * j + 8) && (y - 8 == 16 * i + 8))) {
 					if (map[i][j] == 2) {
+						score += 50;
+						oneUp += 50;
 						//Make ghosts frightened
+					} else {
+						score += 10;
+						oneUp += 10;
 					}
 					map[i][j] = -1;
-				}
-				if ((y == 16 * i + 8) && (x - 8 == 16 * j + 8)) {
-					if (map[i][j] == 2) {
-						//Make ghosts frightened
+					if (oneUp >= 10000) {
+						lives++;
+						oneUp = oneUp - 10000;
 					}
-					map[i][j] = -1;
-				}
-				if ((x - 16 == 16 * j + 8) && (y - 8 == 16 * i + 8)) {
-					if (map[i][j] == 2) {
-						//Make ghosts frightened
-					}
-					map[i][j] = -1;
-				}
-				if ((x == 16 * j + 8) && (y - 8 == 16 * i + 8)) {
-					if (map[i][j] == 2) {
-						//Make ghosts frightened
-					}
-					map[i][j] = -1;
 				}
 			}
 		}
