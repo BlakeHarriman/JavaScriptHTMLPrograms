@@ -135,16 +135,16 @@ function component(width, height, color, x, y, type) {
 	this.willCollide = function(velocityX, velocityY, direction, keyPress) {
 		//track = 1;
 		if (direction == 0) {
-			x = pacman.x + (velocityX * Math.sin(this.angle));
-			y = pacman.y - (velocityY * Math.cos(this.angle));
+			x = this.x + (velocityX * Math.sin(this.angle));
+			y = this.y - (velocityY * Math.cos(this.angle));
 			/*if (keyPress == 3) {
 				y += 1;
 			} else if (keyPress == 4) {
 				y -= 1;
 			}*/
 		} else if (direction == 1) {
-			x = pacman.x + (velocityX * Math.cos(this.angle));
-			y = pacman.y - (velocityY * Math.sin(this.angle));
+			x = this.x + (velocityX * Math.cos(this.angle));
+			y = this.y - (velocityY * Math.sin(this.angle));
 			/*if (keyPress == 1) {
 				x += 1;
 			} else if (keyPress == 2) {

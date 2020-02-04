@@ -124,6 +124,7 @@ function updateGame() {
 	teleport();
 	pacman.newPos();
 	pacman.update();
+	
 	//console.log("Pacman X: " + pacman.x);
 	//console.log("Pacman Y: " + pacman.y);
 	/*ctx.fillStyle = "yellow";
