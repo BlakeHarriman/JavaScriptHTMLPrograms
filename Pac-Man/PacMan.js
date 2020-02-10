@@ -96,6 +96,11 @@ function component(width, height, color, x, y, type) {
 	this.velocityY = velocityY;
 	this.angle = 0;
 	this.direction = 0;
+	if (type == "ghost") {
+		this.velocityX = 1;
+		this.velocityY = 0;
+		this.direction = 1;
+	}
 	this.update = function() {
         ctx = maze.context;
         ctx.save();
@@ -104,6 +109,7 @@ function component(width, height, color, x, y, type) {
         ctx.fillStyle = color;
 		if (type == "pac") {
 			ctx.strokeStyle = 'yellow';
+			ctx.fillStyle = 'yellow';
 			ctx.beginPath();
 			ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
 			//console.log("WIDTH: " + this.width / -2);
@@ -112,6 +118,14 @@ function component(width, height, color, x, y, type) {
 			ctx.stroke();
 			//ctx.fillStyle = "green";
 			//ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
+		} else if (type == "ghost") {
+			ctx.fillStyle = 'red';
+			//ctx.beginPath();
+			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
+			//console.log("WIDTH: " + this.width / -2);
+			//console.log("HEIGHT: " + this.height / -2);
+			//ctx.fillStyle = "green";
+			ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
 		} else {
 			ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
 		}
@@ -401,10 +415,18 @@ function wallCollision() {
 	/*if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction)) && (isTouchingRight(pacman.x, pacman.y, pacman.direction)) && (isTouchingTop(pacman.x, pacman.y, pacman.direction)) && (isTouchingRight(pacman.x, pacman.y, pacman.direction))) {
 		//console.log("CURRENTLY COLLIDING");
 	}*/
+	//Wall Collision for Pacman
 	if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction) && (keyPress == 2)) || (isTouchingRight(pacman.x, pacman.y, pacman.direction) && keyPress == 1)) {
 		pacman.velocityX = 0;
 	} else if ((isTouchingTop(pacman.x, pacman.y, pacman.direction) && (keyPress == 4)) || (isTouchingBottom(pacman.x, pacman.y, pacman.direction) && (keyPress == 3))) {
 		pacman.velocityY = 0;
+	}
+	
+	//Wall collision for blinky
+	if ((isTouchingLeft(blinky.x, blinky.y, blinky.direction) && (keyPress == 2)) || (isTouchingRight(blinky.x, blinky.y, blinky.direction) && keyPress == 1)) {
+		blinky.velocityX = 0;
+	} else if ((isTouchingTop(blinky.x, blinky.y, blinky.direction) && (keyPress == 4)) || (isTouchingBottom(blinky.x, blinky.y, blinky.direction) && (keyPress == 3))) {
+		blinky.velocityY = 0;
 	}
 	if (isMakingContact(pacman.x, pacman.y, pacman.direction) == 4) {
 		//console.log("IS MAKING CONTACT");
@@ -448,7 +470,7 @@ function teleport() {
 
 function init() {
 	pacman = new component (35, 35, "yellow", 233, 432, "pac");
-	//blinky = new component (5, 5, "red", 16, 12, "ghost");
+	blinky = new component (35, 35, "red", 233, 240, "ghost");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
 	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
 	//clyde = new component (5, 5, "orange", 16, 15, "ghost");

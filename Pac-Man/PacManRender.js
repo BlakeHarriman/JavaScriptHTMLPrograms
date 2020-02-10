@@ -124,6 +124,8 @@ function updateGame() {
 	teleport();
 	pacman.newPos();
 	pacman.update();
+	blinky.newPos();
+	blinky.update();
 	
 	//console.log("Pacman X: " + pacman.x);
 	//console.log("Pacman Y: " + pacman.y);
