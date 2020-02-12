@@ -14,7 +14,6 @@ var colors = [
 
 var blinkyUpdate = function() {
 	var key = Math.floor(Math.random() * (40 - 37 + 1) + 37);
-	console.log("BLINKY KEY: " + key);
     if(key === 37){ //Left Arrow
 		if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) {
 			console.log("HHHHHHHHHHHH");

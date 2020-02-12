@@ -262,7 +262,7 @@ function isTouchingLeft(x, y, direction) { //Pacman touching left side of a wall
 					//console.log("IS TOUCHING LEFT");
 					return true;
 				}
-				ctx.fillStyle = "red";
+				//ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
 					//ctx.fillRect(16 * j, 16 * i + k, 1, 1);
 				}
@@ -289,7 +289,7 @@ function isTouchingRight(x, y, direction) { //Pacman touching right side of a wa
 					//console.log("IS TOUCHING RIGHT");
 					return true;
 				}
-				ctx.fillStyle = "red";
+				//ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
 					//ctx.fillRect(16 * j + 15, 16 * i + k, 1, 1);
 				}
@@ -317,7 +317,7 @@ function isTouchingTop(x, y, direction) { //Pacman touching top side of a wall
 					//console.log("IS TOUCHING TOP");
 					return true;
 				}
-				ctx.fillStyle = "red";
+				//ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
 					//ctx.fillRect(16 * j + k, 16 * i, 1, 1);
 				}
@@ -344,7 +344,7 @@ function isTouchingBottom(x, y, direction) { //Pacman touching bottom side of a 
 					//console.log("IS TOUCHING BOTTOM");
 					return true;
 				}
-				ctx.fillStyle = "red";
+				//ctx.fillStyle = "red";
 				for (k = 0; k < 15; k++) {
 					//ctx.fillRect(16 * j + k, 16 * i + 15, 1, 1);
 				}
