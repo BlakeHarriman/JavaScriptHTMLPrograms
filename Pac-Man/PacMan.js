@@ -7,7 +7,6 @@ var PELLET = 1;
 var PACMAN = 2;
 var playing = true;
 var pacman;
-var keyPress = 0;
 var touching = 0;
 var blinking = 0;
 var score = 0;
@@ -96,11 +95,7 @@ function component(width, height, color, x, y, type) {
 	this.velocityY = velocityY;
 	this.angle = 0;
 	this.direction = 0;
-	if (type == "ghost") {
-		this.velocityX = 1;
-		this.velocityY = 0;
-		this.direction = 1;
-	}
+	this.keyPress = 0;
 	this.update = function() {
         ctx = maze.context;
         ctx.save();
@@ -416,16 +411,16 @@ function wallCollision() {
 		//console.log("CURRENTLY COLLIDING");
 	}*/
 	//Wall Collision for Pacman
-	if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction) && (keyPress == 2)) || (isTouchingRight(pacman.x, pacman.y, pacman.direction) && keyPress == 1)) {
+	if ((isTouchingLeft(pacman.x, pacman.y, pacman.direction) && (pacman.keyPress == 2)) || (isTouchingRight(pacman.x, pacman.y, pacman.direction) && pacman.keyPress == 1)) {
 		pacman.velocityX = 0;
-	} else if ((isTouchingTop(pacman.x, pacman.y, pacman.direction) && (keyPress == 4)) || (isTouchingBottom(pacman.x, pacman.y, pacman.direction) && (keyPress == 3))) {
+	} else if ((isTouchingTop(pacman.x, pacman.y, pacman.direction) && (pacman.keyPress == 4)) || (isTouchingBottom(pacman.x, pacman.y, pacman.direction) && (pacman.keyPress == 3))) {
 		pacman.velocityY = 0;
 	}
 	
 	//Wall collision for blinky
-	if ((isTouchingLeft(blinky.x, blinky.y, blinky.direction) && (keyPress == 2)) || (isTouchingRight(blinky.x, blinky.y, blinky.direction) && keyPress == 1)) {
+	if ((isTouchingLeft(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 2)) || (isTouchingRight(blinky.x, blinky.y, blinky.direction) && blinky.keyPress == 1)) {
 		blinky.velocityX = 0;
-	} else if ((isTouchingTop(blinky.x, blinky.y, blinky.direction) && (keyPress == 4)) || (isTouchingBottom(blinky.x, blinky.y, blinky.direction) && (keyPress == 3))) {
+	} else if ((isTouchingTop(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 4)) || (isTouchingBottom(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 3))) {
 		blinky.velocityY = 0;
 	}
 	if (isMakingContact(pacman.x, pacman.y, pacman.direction) == 4) {
@@ -459,10 +454,10 @@ function pelletCollision(x, y, direction) {
 }
 
 function teleport() {
-	if (pacman.x == 0 && pacman.y - 16 == 272 && keyPress == 1) {
+	if (pacman.x == 0 && pacman.y - 16 == 272 && pacman.keyPress == 1) {
 		pacman.x = 480;
 	}
-	if (pacman.x == 480 && pacman.y - 16 == 272 && keyPress == 2) {
+	if (pacman.x == 480 && pacman.y - 16 == 272 && pacman.keyPress == 2) {
 		pacman.x = 0;
 	}
 }

@@ -12,6 +12,68 @@ var colors = [
 		'blue', 'darkgreen', 'red', 'navyblue', 'darkgred', 'cyan', 'purple', 'black'
 		];
 
+var blinkyUpdate = function() {
+	var key = Math.floor(Math.random() * (40 - 37 + 1) + 37);
+	console.log("BLINKY KEY: " + key);
+    if(key === 37){ //Left Arrow
+		if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) {
+			console.log("HHHHHHHHHHHH");
+			if(blinky.keyPress == 2) {
+				//keyBuffer.shift();
+			}
+			blinky.velocityX = -1;
+			blinky.velocityY = 0;
+			blinky.direction = 1;
+			blinky.keyPress = 1;
+			console.log("LEFT");
+		} else if(keyBuffer[0] != 39 && blinky.velocityY != 0) {
+			//keyBuffer.push(key);
+		}
+	} else if(key === 38){ //Up Arrow
+		if (blinky.willCollide(0, 1, 0, 3) && !isTouchingBottom(blinky.x, blinky.y, blinky.direction)) {
+			if(blinky.keyPress == 4) {
+				//keyBuffer.shift();
+			}
+			blinky.velocityX = 0;
+			blinky.velocityY = 1;
+			blinky.direction = 0;
+			blinky.keyPress = 3;
+			console.log("UP");
+		} else if(keyBuffer[0] != 40 && blinky.velocityX != 0) {
+			//keyBuffer.push(key);
+		}
+	} else if(key === 39){ //Right Arrow
+		if (blinky.willCollide(1, 0, 1, 2) && !isTouchingLeft(blinky.x, blinky.y, blinky.direction)) {
+			if(blinky.keyPress == 1) {
+				//keyBuffer.shift();
+			}
+			blinky.velocityX = 1;
+			blinky.velocityY = 0;
+			blinky.direction = 1;
+			blinky.keyPress = 2;
+			console.log("RIGHT");
+		} else if(keyBuffer[0] != 37 && blinky.velocityY != 0) {
+			//keyBuffer.push(key);
+		}
+	} else if(key === 40){ //Down Arrow
+		if (blinky.willCollide(0, -1, 0, 4) && !isTouchingTop(blinky.x, blinky.y, blinky.direction)) {
+			if(blinky.keyPress == 3) {
+				//keyBuffer.shift();
+			}
+			blinky.velocityX = 0;
+			blinky.velocityY = -1;
+			blinky.direction = 0;
+			blinky.keyPress = 4;
+			console.log("DOWN");
+		} else if(keyBuffer[0] != 38 && blinky.velocityX != 0) {
+			//keyBuffer.push(key);
+		}
+	} else if (key === 83) {
+		blinky.velocityX = 0;
+		blinky.velocityY = 0;
+	}
+}
+
 var update = function() {
 	//console.log("HELLLLLLO");
 	var key = keyBuffer.shift();
@@ -23,13 +85,13 @@ var update = function() {
 			keyPress = 1;*/
 		if (pacman.willCollide(-1, 0, 1, 1) && !isTouchingRight(pacman.x, pacman.y, pacman.direction)) {
 			console.log("HHHHHHHHHHHH");
-			if(keyPress == 2) {
+			if(pacman.keyPress == 2) {
 				keyBuffer.shift();
 			}
 			pacman.velocityX = -1;
 			pacman.velocityY = 0;
 			pacman.direction = 1;
-			keyPress = 1;
+			pacman.keyPress = 1;
 			console.log("LEFT");
 		} else if(keyBuffer[0] != 39 && pacman.velocityY != 0) {
 			keyBuffer.push(key);
@@ -46,13 +108,13 @@ var update = function() {
 			pacman.direction = 0;
 			keyPress = 3;*/
 		if (pacman.willCollide(0, 1, 0, 3) && !isTouchingBottom(pacman.x, pacman.y, pacman.direction)) {
-			if(keyPress == 4) {
+			if(pacman.keyPress == 4) {
 				keyBuffer.shift();
 			}
 			pacman.velocityX = 0;
 			pacman.velocityY = 1;
 			pacman.direction = 0;
-			keyPress = 3;
+			pacman.keyPress = 3;
 			console.log("UP");
 		} else if(keyBuffer[0] != 40 && pacman.velocityX != 0) {
 			keyBuffer.push(key);
@@ -69,13 +131,13 @@ var update = function() {
 			pacman.direction = 1;
 			keyPress = 2;*/
 		if (pacman.willCollide(1, 0, 1, 2) && !isTouchingLeft(pacman.x, pacman.y, pacman.direction)) {
-			if(keyPress == 1) {
+			if(pacman.keyPress == 1) {
 				keyBuffer.shift();
 			}
 			pacman.velocityX = 1;
 			pacman.velocityY = 0;
 			pacman.direction = 1;
-			keyPress = 2;
+			pacman.keyPress = 2;
 			console.log("RIGHT");
 		} else if(keyBuffer[0] != 37 && pacman.velocityY != 0) {
 			keyBuffer.push(key);
@@ -92,13 +154,13 @@ var update = function() {
 			pacman.direction = 0;
 			keyPress = 4;*/
 		if (pacman.willCollide(0, -1, 0, 4) && !isTouchingTop(pacman.x, pacman.y, pacman.direction)) {
-			if(keyPress == 3) {
+			if(pacman.keyPress == 3) {
 				keyBuffer.shift();
 			}
 			pacman.velocityX = 0;
 			pacman.velocityY = -1;
 			pacman.direction = 0;
-			keyPress = 4;
+			pacman.keyPress = 4;
 			console.log("DOWN");
 		} else if(keyBuffer[0] != 38 && pacman.velocityX != 0) {
 			keyBuffer.push(key);
@@ -117,6 +179,7 @@ var update = function() {
 function updateGame() {
 	maze.clear();
 	update();
+	blinkyUpdate();
 	drawMap();
 	touching = 0;
 	wallCollision();
