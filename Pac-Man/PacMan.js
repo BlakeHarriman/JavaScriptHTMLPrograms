@@ -23,6 +23,7 @@ gs=tc=20;
 velocityX = 0;
 velocityY = 0;
 track = 1;
+write = 0;
 
 //Maze
 var map = [
@@ -164,7 +165,7 @@ function component(width, height, color, x, y, type) {
 		//console.log("Next Y: " + (y));
 		touching = 0;
 		if (isMakingContact(x, y, direction) >= 2) {
-			console.log("HURRAY");
+			//console.log("HURRAY");
 			return true;
 		}
 		/*
@@ -204,6 +205,14 @@ function drawMap() {
 				ctx.arc(16 * j + 8, 16 * i + 8, 2, 0, 2 * Math.PI);
 				ctx.fill();
 				ctx.stroke();
+				if (write == 0) {
+					console.log("J: " + (16 * j + 8));
+					console.log("I: " + (16 * i + 8));
+				}
+				if (16 * j + 8 == 424 && 16 * i + 8 == 520) {  //blinky.y == 288 //blinky.x == 352
+					ctx.fillStyle = "green";				   //16 * i + 8 == 280  //16 * j + 8 == 344
+					ctx.fillRect(16 * j + 8, 16 * i + 8, 3, 3);
+				}
 			} else if (map[i][j] == 2 && blinking <= 50) {
 				ctx.strokeStyle = "#FFC0CB";
 				ctx.fillStyle = "#FFC0CB";
@@ -214,6 +223,7 @@ function drawMap() {
 			}
 		}
 	}
+	write = 1;
 	blinking++
 	if (blinking == 100) {
 		blinking = 0;
@@ -423,6 +433,11 @@ function wallCollision() {
 	} else if ((isTouchingTop(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 4)) || (isTouchingBottom(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 3))) {
 		blinky.velocityY = 0;
 	}
+	/*if (blinky.x == 432) {
+		blinky.velocityX = 0;
+		blinky.velocityY = 0;
+	}*/
+	
 	if (isMakingContact(pacman.x, pacman.y, pacman.direction) == 4) {
 		//console.log("IS MAKING CONTACT");
 	}
@@ -459,6 +474,13 @@ function teleport() {
 	}
 	if (pacman.x == 480 && pacman.y - 16 == 272 && pacman.keyPress == 2) {
 		pacman.x = 0;
+	}
+	
+	if (blinky.x == 1 && blinky.y - 16 == 272 && blinky.keyPress == 1) {
+		blinky.x = 466;
+	}
+	if (blinky.x == 463 && blinky.y - 16 == 272 && blinky.keyPress == 2) {
+		blinky.x = -2;
 	}
 }
 
