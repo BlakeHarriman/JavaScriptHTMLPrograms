@@ -2,10 +2,13 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-var key = 37;
+var blinkyKey = 37;
+var clydeKey = 39;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
+var chasing = false;
+var changeKey = 0;
 //var canvas = document.getElementById('canvas'),
 //	ctx = canvas.getContext('2d');
 	
@@ -21,6 +24,11 @@ var blinkyUpdate = function() {
 	coord = getDestination();
 	xCoord = coord[0];
 	yCoord = coord[1];
+	if (chasing == false) {
+		path = getPath();
+		console.log(path);
+		chasing = true;
+	}
 	intersection = 0;
 	if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) { //Left Arrow
 		intersection++;
@@ -46,28 +54,55 @@ var blinkyUpdate = function() {
 		blinky.direction = 0;
 		blinky.keyPress = 4;
 	}*/
-	
+	if (changeKey == 20) {
 	if (intersection >= 3 || (blinky.velocityX == 0 && blinky.velocityY == 0)) {
 		var checkAgain = true;
 		var newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
 		while (checkAgain) {
 			newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
-			if (Math.abs(key - newKey) != 2) {
+			if (Math.abs(blinkyKey - newKey) != 2) {
 				checkAgain = false;
 			}
+			
+			if (newKey === 37 && isTouchingRight(blinky.x, blinky.y, blinky.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 38 && isTouchingBottom(blinky.x, blinky.y, blinky.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 39 && isTouchingLeft(blinky.x, blinky.y, blinky.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 40 && isTouchingTop(blinky.x, blinky.y, blinky.direction)) {
+				checkAgain = true;
+			}
 		}
-		console.log("OLD KEY: " + key);
-		console.log("NEW KEY: " + newKey);
-		key = newKey;
+		blinkyKey = newKey;
 	}
-	if(key === 37){ //Left Arrow
+	
+	temp = path.shift();
+	if (temp == "North") {
+		blinkyKey = 38;
+	} else if (temp == "South") {
+		blinkyKey = 40;
+	} else if (temp == "East") {
+		blinkyKey = 39;
+	} else if (temp == "West") {
+		blinkyKey = 37;
+	} else {
+		blinkyKey = 83;
+	}
+		changeKey = 0;
+	}
+	
+	if(blinkyKey === 37){ //Left Arrow
 		if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) {
 			blinky.velocityX = -1;
 			blinky.velocityY = 0;
 			blinky.direction = 1;
 			blinky.keyPress = 1;
 		}
-	} else if(key === 38){ //Up Arrow
+	} else if(blinkyKey === 38){ //Up Arrow
 		if (blinky.willCollide(0, 1, 0, 3) && !isTouchingBottom(blinky.x, blinky.y, blinky.direction)) {
 			blinky.velocityX = 0;
 			blinky.velocityY = 1;
@@ -75,23 +110,101 @@ var blinkyUpdate = function() {
 			blinky.keyPress = 3;
 			//console.log("UP");
 		}
-	} else if(key === 39){ //Right Arrow
+	} else if(blinkyKey === 39){ //Right Arrow
 		if (blinky.willCollide(1, 0, 1, 2) && !isTouchingLeft(blinky.x, blinky.y, blinky.direction)) {
 			blinky.velocityX = 1;
 			blinky.velocityY = 0;
 			blinky.direction = 1;
 			blinky.keyPress = 2;
 		}
-	} else if(key === 40){ //Down Arrow
+	} else if(blinkyKey === 40){ //Down Arrow
 		if (blinky.willCollide(0, -1, 0, 4) && !isTouchingTop(blinky.x, blinky.y, blinky.direction)) {
 			blinky.velocityX = 0;
 			blinky.velocityY = -1;
 			blinky.direction = 0;
 			blinky.keyPress = 4;
 		}
-	} else if (key === 83) {
+	} else if (blinkyKey === 83) {
 		blinky.velocityX = 0;
 		blinky.velocityY = 0;
+	}
+	changeKey++;
+}
+
+var clydeUpdate = function() {
+	coord = getDestination();
+	xCoord = coord[0];
+	yCoord = coord[1];
+	intersection = 0;
+	if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) { //Left Arrow
+		intersection++;
+	}
+	if (clyde.willCollide(0, 1, 0, 3) && !isTouchingBottom(clyde.x, clyde.y, clyde.direction)) { //Up Arrow
+		intersection++;
+	}
+	if (clyde.willCollide(1, 0, 1, 2) && !isTouchingLeft(clyde.x, clyde.y, clyde.direction)) { //Right Arrow
+		intersection++;
+	}
+	if (clyde.willCollide(0, -1, 0, 4) && !isTouchingTop(clyde.x, clyde.y, clyde.direction)) { //Down Arrow
+		intersection++;
+	}
+	
+	if (intersection >= 3 || (clyde.velocityX == 0 && clyde.velocityY == 0)) {
+		var checkAgain = true;
+		var newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
+		while (checkAgain) {
+			newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
+			if (Math.abs(clydeKey - newKey) != 2) {
+				checkAgain = false;
+			}
+			
+			if (newKey === 37 && isTouchingRight(clyde.x, clyde.y, clyde.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 38 && isTouchingBottom(clyde.x, clyde.y, clyde.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 39 && isTouchingLeft(clyde.x, clyde.y, clyde.direction)) {
+				checkAgain = true;
+			}
+			if (newKey === 40 && isTouchingTop(clyde.x, clyde.y, clyde.direction)) {
+				checkAgain = true;
+			}
+		}
+		clydeKey = newKey;
+	}
+	if(clydeKey === 37){ //Left Arrow
+		if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) {
+			clyde.velocityX = -1;
+			clyde.velocityY = 0;
+			clyde.direction = 1;
+			clyde.keyPress = 1;
+		}
+	} else if(clydeKey === 38){ //Up Arrow
+		if (clyde.willCollide(0, 1, 0, 3) && !isTouchingBottom(clyde.x, clyde.y, clyde.direction)) {
+			clyde.velocityX = 0;
+			clyde.velocityY = 1;
+			clyde.direction = 0;
+			clyde.keyPress = 3;
+			//console.log("UP");
+		}
+	} else if(clydeKey === 39){ //Right Arrow
+		if (clyde.willCollide(1, 0, 1, 2) && !isTouchingLeft(clyde.x, clyde.y, clyde.direction)) {
+			clyde.velocityX = 1;
+			clyde.velocityY = 0;
+			clyde.direction = 1;
+			clyde.keyPress = 2;
+		}
+	} else if(clydeKey === 40){ //Down Arrow
+		if (clyde.willCollide(0, -1, 0, 4) && !isTouchingTop(clyde.x, clyde.y, clyde.direction)) {
+			clyde.velocityX = 0;
+			clyde.velocityY = -1;
+			clyde.direction = 0;
+			clyde.keyPress = 4;
+		}
+	} else if (key === 83) {
+		clyde.velocityX = 0;
+		clyde.velocityY = 0;
 	}
 }
 
@@ -201,6 +314,7 @@ function updateGame() {
 	maze.clear();
 	update();
 	blinkyUpdate();
+	clydeUpdate();
 	drawMap();
 	touching = 0;
 	wallCollision();
@@ -210,6 +324,8 @@ function updateGame() {
 	pacman.update();
 	blinky.newPos();
 	blinky.update();
+	clyde.newPos();
+	clyde.update();
 	
 	//console.log("Pacman X: " + pacman.x);
 	//console.log("Pacman Y: " + pacman.y);
@@ -224,6 +340,7 @@ function updateGame() {
 	ctx.fillRect(pacman.x - 16, pacman.y - 8, 2, 2); //left middle
 	ctx.fillRect(pacman.x - 8, pacman.y, 2, 2); //bottom middle*/
 }
+
 updateGame();
 setInterval(updateGame, 10);
 //render();

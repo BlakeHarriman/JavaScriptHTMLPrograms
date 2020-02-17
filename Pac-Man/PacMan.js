@@ -114,8 +114,16 @@ function component(width, height, color, x, y, type) {
 			ctx.stroke();
 			//ctx.fillStyle = "green";
 			//ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
-		} else if (type == "ghost") {
+		} else if (type == "blinky") {
 			ctx.fillStyle = 'red';
+			//ctx.beginPath();
+			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
+			//console.log("WIDTH: " + this.width / -2);
+			//console.log("HEIGHT: " + this.height / -2);
+			//ctx.fillStyle = "green";
+			ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
+		} else if (type == "clyde") {
+			ctx.fillStyle = 'orange';
 			//ctx.beginPath();
 			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
 			//console.log("WIDTH: " + this.width / -2);
@@ -206,10 +214,10 @@ function drawMap() {
 				ctx.fill();
 				ctx.stroke();
 				if (write == 0) {
-					console.log("J: " + (16 * j + 8));
-					console.log("I: " + (16 * i + 8));
+					//console.log("J: " + (16 * j + 8));
+					//console.log("I: " + (16 * i + 8));
 				}
-				if (16 * j + 8 == 424 && 16 * i + 8 == 520) {  //blinky.y == 288 //blinky.x == 352
+				if (j == 26 && i == 32) {  //blinky.y == 288 //blinky.x == 352
 					ctx.fillStyle = "green";				   //16 * i + 8 == 280  //16 * j + 8 == 344
 					ctx.fillRect(16 * j + 8, 16 * i + 8, 3, 3);
 				}
@@ -221,6 +229,10 @@ function drawMap() {
 				ctx.fill();
 				ctx.stroke();
 			}
+			if (j == 14 && i == 14) {  //blinky.y == 288 //blinky.x == 352
+					ctx.fillStyle = "green";				   //16 * i + 8 == 280  //16 * j + 8 == 344
+					ctx.fillRect(16 * j + 8, 16 * i + 8, 3, 3);
+				}
 		}
 	}
 	write = 1;
@@ -433,6 +445,12 @@ function wallCollision() {
 	} else if ((isTouchingTop(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 4)) || (isTouchingBottom(blinky.x, blinky.y, blinky.direction) && (blinky.keyPress == 3))) {
 		blinky.velocityY = 0;
 	}
+	
+	if ((isTouchingLeft(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 2)) || (isTouchingRight(clyde.x, clyde.y, clyde.direction) && clyde.keyPress == 1)) {
+		clyde.velocityX = 0;
+	} else if ((isTouchingTop(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 4)) || (isTouchingBottom(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 3))) {
+		clyde.velocityY = 0;
+	}
 	/*if (blinky.x == 432) {
 		blinky.velocityX = 0;
 		blinky.velocityY = 0;
@@ -482,15 +500,22 @@ function teleport() {
 	if (blinky.x == 463 && blinky.y - 16 == 272 && blinky.keyPress == 2) {
 		blinky.x = -2;
 	}
+	
+	if (clyde.x == 1 && clyde.y - 16 == 272 && clyde.keyPress == 1) {
+		clyde.x = 466;
+	}
+	if (clyde.x == 463 && clyde.y - 16 == 272 && clyde.keyPress == 2) {
+		clyde.x = -2;
+	}
 }
 
 
 function init() {
 	pacman = new component (35, 35, "yellow", 233, 432, "pac");
-	blinky = new component (35, 35, "red", 233, 240, "ghost");
+	blinky = new component (35, 35, "red", 233, 240, "blinky");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
 	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
-	//clyde = new component (5, 5, "orange", 16, 15, "ghost");
+	clyde = new component (35, 35, "orange", 233, 240, "clyde");
 	maze.start();
 }
 
