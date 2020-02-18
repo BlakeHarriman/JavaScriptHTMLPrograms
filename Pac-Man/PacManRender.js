@@ -2,13 +2,16 @@ var W = 448, H = 576;
 COLS = 28;
 ROWS = 36;
 log = 3;
-var blinkyKey = 37;
-var clydeKey = 39;
+var blinkyKey = 0;
+var clydeKey = 0;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
 var chasing = false;
 var changeKey = 0;
+var timing = 0;
+var temp = 83;
+var path = [];
 //var canvas = document.getElementById('canvas'),
 //	ctx = canvas.getContext('2d');
 	
@@ -17,17 +20,49 @@ var colors = [
 		];
 
 function getDestination() {
-	return [432, 528];
+	for (i = 0; i < ROWS; i++) {
+		for (j = 0; j < COLS; j++) {
+			if (pacman.y == 16 * i + 16 && pacman.x == 16 * j + 16) {
+				return [i, j];
+			}
+		}
+	}
+	return [-1, -1];
 }
 
 var blinkyUpdate = function() {
 	coord = getDestination();
 	xCoord = coord[0];
 	yCoord = coord[1];
-	if (chasing == false) {
-		path = getPath();
-		console.log(path);
+	//if (coord != [-1, -1]) {
+	//	path = getPath(xCoord, yCoord);
+	//	temp = path.shift();
+	//}
+	
+	if (xCoord != -1 && yCoord != -1 && chasing == false) {
+		//console.log(xCoord);
+		//console.log(yCoord);
+		for (i = 0; i < ROWS; i++) {
+			for (j = 0; j < COLS; j++) {
+				console.log("HELLO");
+				if (blinky.y == 16 * i + 16 && blinky.x == 16 * j + 16) {
+					console.log("MADE THE IF STATEMENT");
+					if (map[i][j] != 0) {
+						blinkyX = i;
+						blinkyY = j;
+					}
+				}
+			}
+		}
+		console.log("BLINKY Y COORD: " + blinky.y);
+		console.log("BLINKY X COORD: " + blinky.x);
+		console.log("blinkyX: " + blinkyX);
+		console.log("blinkyY: " + blinkyY);
+		console.log("X COORD: " + xCoord);
+		console.log("Y COORD: " + yCoord);
+		path = getPath(blinkyX, blinkyY, xCoord, yCoord);
 		chasing = true;
+		temp = path.shift();
 	}
 	intersection = 0;
 	if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) { //Left Arrow
@@ -54,7 +89,6 @@ var blinkyUpdate = function() {
 		blinky.direction = 0;
 		blinky.keyPress = 4;
 	}*/
-	if (changeKey == 20) {
 	if (intersection >= 3 || (blinky.velocityX == 0 && blinky.velocityY == 0)) {
 		var checkAgain = true;
 		var newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
@@ -79,8 +113,11 @@ var blinkyUpdate = function() {
 		}
 		blinkyKey = newKey;
 	}
-	
-	temp = path.shift();
+	if (Math.abs(oldBlinkyX - blinky.x) >= 16 || Math.abs(oldBlinkyY - blinky.y) >= 16) {
+		oldBlinkyX = blinky.x;
+		oldBlinkyY = blinky.y;
+		temp = path.shift();
+	}
 	if (temp == "North") {
 		blinkyKey = 38;
 	} else if (temp == "South") {
@@ -91,8 +128,6 @@ var blinkyUpdate = function() {
 		blinkyKey = 37;
 	} else {
 		blinkyKey = 83;
-	}
-		changeKey = 0;
 	}
 	
 	if(blinkyKey === 37){ //Left Arrow
@@ -129,6 +164,10 @@ var blinkyUpdate = function() {
 		blinky.velocityY = 0;
 	}
 	changeKey++;
+	if (path.length == 0) {
+		console.log("HI");
+		chasing = false;
+	}
 }
 
 var clydeUpdate = function() {
@@ -173,6 +212,8 @@ var clydeUpdate = function() {
 		}
 		clydeKey = newKey;
 	}
+	
+	clydeKey = 83;
 	if(clydeKey === 37){ //Left Arrow
 		if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) {
 			clyde.velocityX = -1;
@@ -202,7 +243,7 @@ var clydeUpdate = function() {
 			clyde.direction = 0;
 			clyde.keyPress = 4;
 		}
-	} else if (key === 83) {
+	} else if (clydeKey === 83) {
 		clyde.velocityX = 0;
 		clyde.velocityY = 0;
 	}
@@ -326,6 +367,7 @@ function updateGame() {
 	blinky.update();
 	clyde.newPos();
 	clyde.update();
+	
 	
 	//console.log("Pacman X: " + pacman.x);
 	//console.log("Pacman Y: " + pacman.y);

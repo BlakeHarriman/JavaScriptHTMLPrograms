@@ -131,7 +131,7 @@ var exploreInDirection = function(currentLocation, direction, grid) {
 // Think of the second index as "distance from the left-most column"
 
 // This is how we would represent the grid with obstacles above
-function getPath() {
+function getPath(startX, startY, x, y) {
 	var newMap = [
 		[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 		[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -174,8 +174,8 @@ function getPath() {
 	//console.log(newMap[11][14]);
 	//console.log(newMap[29][26]);
 
-	newMap[14][14] = 4;
-	newMap[32][26] = 3;
+	newMap[startX][startY] = 4;
+	newMap[x][y] = 3;
 
 	for (i = 0; i < 36; i++) {
 		for (j = 0; j < 28; j++) {
@@ -189,15 +189,16 @@ function getPath() {
 			}
 		}
 	}
-	console.log(newMap);
+	//console.log(newMap);
 
 
-	newMap[14][14] = "Start";
-	newMap[32][26] = "Goal";
+	newMap[startX][startY] = "Start";
+	newMap[x][y] = "Goal";
 
 	//console.log(newMap[11][14]);
 	//console.log(newMap);
 	//console.log(findShortestPath([11,14], newMap));
-	var pathArr = findShortestPath([11,14], newMap);
+	var pathArr = findShortestPath([startX, startY], newMap);
+	console.log(pathArr);
 	return pathArr;
 }

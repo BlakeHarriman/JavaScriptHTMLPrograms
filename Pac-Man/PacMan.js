@@ -16,6 +16,8 @@ var topLeftTouching = false;
 var topRightTouching = false;
 var bottomLeftTouching = false;
 var bottomRightTouching = false;
+var oldBlinkyX = 240;
+var oldBlinkyY = 240;
 
 px=26;
 py=13;
@@ -229,8 +231,8 @@ function drawMap() {
 				ctx.fill();
 				ctx.stroke();
 			}
-			if (j == 14 && i == 14) {  //blinky.y == 288 //blinky.x == 352
-					ctx.fillStyle = "green";				   //16 * i + 8 == 280  //16 * j + 8 == 344
+			if (j == 14 && i == 14) {
+					ctx.fillStyle = "green";
 					ctx.fillRect(16 * j + 8, 16 * i + 8, 3, 3);
 				}
 		}
@@ -383,22 +385,18 @@ function isMakingContact(x, y, direction) {
 			if (map[i][j] == 0) {
 				if ((y - 16 == 16 * i + 16 && ((x >= 16 * j) && (x <= 16 * j + 16))) || (x == 16 * j && ((y - 16 >= 16 * i) && (y - 16 <= 16 * i + 16)))) {
 					//Top right is touching
-					//touching++;
 					topRightTouching = true;
 				}
 				if ((y - 16 == 16 * i + 16 && ((x - 16 >= 16 * j) && (x - 16 <= 16 * j +16))) || (x - 16 == 16 * j + 16 && ((y - 16 >= 16 * i) && (y - 16 <= 16 * i + 16)))) {
 					//Top left is touching
-					//touching++;
 					topLeftTouching = true;
 				}
 				if ((y == 16 * i && ((x - 16 >= 16 * j) && (x - 16 <= 16 * j + 16))) || (x - 16 == 16 * j + 16 && ((y >= 16 * i) && (y <= 16 * i + 16)))) {
 					//Bottom Left is touching
-					//touching++;
 					bottomLeftTouching = true;
 				}
 				if ((y == 16 * i && ((x >= 16 * j) && (x <= 16 * j + 16))) || (x == 16 * j && ((y >= 16 * i) && (y <= 16 * i + 16)))) {
 					//Bottom Right is touching
-					//touching++;
 					bottomRightTouching = true;
 				}
 			}
@@ -512,10 +510,10 @@ function teleport() {
 
 function init() {
 	pacman = new component (35, 35, "yellow", 233, 432, "pac");
-	blinky = new component (35, 35, "red", 233, 240, "blinky");
+	blinky = new component (35, 35, "red", 240, 240, "blinky");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
 	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
-	clyde = new component (35, 35, "orange", 233, 240, "clyde");
+	clyde = new component (35, 35, "orange", 224, 240, "clyde");
 	maze.start();
 }
 
