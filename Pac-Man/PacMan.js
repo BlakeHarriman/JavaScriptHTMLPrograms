@@ -99,6 +99,7 @@ function component(width, height, color, x, y, type) {
 	this.angle = 0;
 	this.direction = 0;
 	this.keyPress = 0;
+	this.frightened = false;
 	this.update = function() {
         ctx = maze.context;
         ctx.save();

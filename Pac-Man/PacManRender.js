@@ -20,11 +20,10 @@ var colors = [
 		];
 
 function getDestination() {
-	for (i = 0; i < ROWS; i++) {
-		for (j = 0; j < COLS; j++) {
-			if (pacman.y == 16 * i + 16 && pacman.x == 16 * j + 16) {
-				return [i, j];
-			}
+	//console.log((pacman.y - 16) / 16);
+	if ((pacman.y - 16) / 16 == Math.round((pacman.y - 16) / 16)) {
+		if ((pacman.x - 16) / 16 == Math.round((pacman.x - 16) / 16)) {
+			return [(pacman.y - 16) / 16, (pacman.x - 16) / 16]
 		}
 	}
 	return [-1, -1];
@@ -34,24 +33,12 @@ var blinkyUpdate = function() {
 	coord = getDestination();
 	xCoord = coord[0];
 	yCoord = coord[1];
-	//if (coord != [-1, -1]) {
-	//	path = getPath(xCoord, yCoord);
-	//	temp = path.shift();
-	//}
 	
 	if (xCoord != -1 && yCoord != -1 && chasing == false) {
-		//console.log(xCoord);
-		//console.log(yCoord);
-		for (i = 0; i < ROWS; i++) {
-			for (j = 0; j < COLS; j++) {
-				console.log("HELLO");
-				if (blinky.y == 16 * i + 16 && blinky.x == 16 * j + 16) {
-					console.log("MADE THE IF STATEMENT");
-					if (map[i][j] != 0) {
-						blinkyX = i;
-						blinkyY = j;
-					}
-				}
+		if ((blinky.y - 16) / 16 == Math.round((blinky.y - 16) / 16)) {
+			if ((blinky.x - 16) / 16 == Math.round((blinky.x - 16) / 16)) {
+				blinkyX = (blinky.y - 16) / 16;
+				blinkyY = (blinky.x - 16) / 16;
 			}
 		}
 		console.log("BLINKY Y COORD: " + blinky.y);
@@ -164,9 +151,9 @@ var blinkyUpdate = function() {
 		blinky.velocityY = 0;
 	}
 	changeKey++;
-	if (path.length == 0) {
-		console.log("HI");
+	if (changeKey = 40 || path.length == 1) {
 		chasing = false;
+		changeKey = 0;
 	}
 }
 
@@ -212,8 +199,6 @@ var clydeUpdate = function() {
 		}
 		clydeKey = newKey;
 	}
-	
-	clydeKey = 83;
 	if(clydeKey === 37){ //Left Arrow
 		if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) {
 			clyde.velocityX = -1;
