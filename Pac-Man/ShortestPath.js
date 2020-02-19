@@ -199,6 +199,6 @@ function getPath(startX, startY, x, y) {
 	//console.log(newMap);
 	//console.log(findShortestPath([11,14], newMap));
 	var pathArr = findShortestPath([startX, startY], newMap);
-	console.log(pathArr);
+	//console.log(pathArr);
 	return pathArr;
 }

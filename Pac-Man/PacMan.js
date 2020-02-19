@@ -18,6 +18,7 @@ var bottomLeftTouching = false;
 var bottomRightTouching = false;
 var oldBlinkyX = 240;
 var oldBlinkyY = 240;
+var scaredTick = 0;
 
 px=26;
 py=13;
@@ -118,7 +119,11 @@ function component(width, height, color, x, y, type) {
 			//ctx.fillStyle = "green";
 			//ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
 		} else if (type == "blinky") {
-			ctx.fillStyle = 'red';
+			if (blinky.frightened) {
+				ctx.fillStyle = 'blue';
+			} else {
+				ctx.fillStyle = 'red';
+			}
 			//ctx.beginPath();
 			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
 			//console.log("WIDTH: " + this.width / -2);
@@ -126,7 +131,11 @@ function component(width, height, color, x, y, type) {
 			//ctx.fillStyle = "green";
 			ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
 		} else if (type == "clyde") {
-			ctx.fillStyle = 'orange';
+			if (blinky.frightened) {
+				ctx.fillStyle = 'blue';
+			} else {
+				ctx.fillStyle = 'orange';
+			}
 			//ctx.beginPath();
 			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
 			//console.log("WIDTH: " + this.width / -2);
@@ -140,13 +149,23 @@ function component(width, height, color, x, y, type) {
     }
 	this.newPos = function() {
 		if (this.direction == 0) {
-			this.x += this.velocityX * Math.sin(this.angle);
-			this.y -= this.velocityY * Math.cos(this.angle);
+			if (this.frightened) {
+				this.x += (this.velocityX * Math.sin(this.angle)) / 2;
+				this.y -= (this.velocityY * Math.cos(this.angle)) / 2;
+			} else {
+				this.x += this.velocityX * Math.sin(this.angle);
+				this.y -= this.velocityY * Math.cos(this.angle);
+			}
 		} else if (this.direction == 1) {
 			//tmp = this.speed;
 			//this.speed = tmp * 2
-			this.x += this.velocityX * Math.cos(this.angle);
-			this.y -= this.velocityY * Math.sin(this.angle);
+			if (this.frightened) {
+				this.x += (this.velocityX * Math.cos(this.angle)) / 2;
+				this.y -= (this.velocityY * Math.sin(this.angle)) / 2;
+			} else {
+				this.x += this.velocityX * Math.cos(this.angle);
+				this.y -= this.velocityY * Math.sin(this.angle);
+			}
 			//this.speed = tmp;
 		}
 		//console.log("X: " + this.x);
@@ -469,7 +488,9 @@ function pelletCollision(x, y, direction) {
 					if (map[i][j] == 2) {
 						score += 50;
 						oneUp += 50;
-						//Make ghosts frightened
+						blinky.frightened = true;
+						clyde.frightened = true;
+						scaredTick = 0;
 					} else {
 						score += 10;
 						oneUp += 10;

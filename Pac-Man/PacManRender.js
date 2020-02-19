@@ -34,6 +34,14 @@ var blinkyUpdate = function() {
 	xCoord = coord[0];
 	yCoord = coord[1];
 	
+	if ((blinky.y - 16) / 16 == Math.round((blinky.y - 16) / 16)) {
+		if ((blinky.x - 16) / 16 == Math.round((blinky.x - 16) / 16)) {
+			if (blinky.frightened && scaredTick > 500) {
+				blinky.frightened = false;
+			}
+		}
+	}
+	
 	if (xCoord != -1 && yCoord != -1 && chasing == false) {
 		if ((blinky.y - 16) / 16 == Math.round((blinky.y - 16) / 16)) {
 			if ((blinky.x - 16) / 16 == Math.round((blinky.x - 16) / 16)) {
@@ -162,6 +170,15 @@ var clydeUpdate = function() {
 	xCoord = coord[0];
 	yCoord = coord[1];
 	intersection = 0;
+	
+	if ((clyde.y - 16) / 16 == Math.round((clyde.y - 16) / 16)) {
+		if ((clyde.x - 16) / 16 == Math.round((clyde.x - 16) / 16)) {
+			if (clyde.frightened && scaredTick > 500) {
+				clyde.frightened = false;
+			}
+		}
+	}
+	
 	if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) { //Left Arrow
 		intersection++;
 	}
@@ -352,6 +369,7 @@ function updateGame() {
 	blinky.update();
 	clyde.newPos();
 	clyde.update();
+	scaredTick++;
 	
 	
 	//console.log("Pacman X: " + pacman.x);
