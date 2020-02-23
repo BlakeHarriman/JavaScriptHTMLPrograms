@@ -11,13 +11,9 @@ var chasing = false;
 var changeKey = 0;
 var timing = 0;
 var temp = 83;
-var path = [];
-//var canvas = document.getElementById('canvas'),
-//	ctx = canvas.getContext('2d');
-	
-var colors = [
-		'blue', 'darkgreen', 'red', 'navyblue', 'darkgred', 'cyan', 'purple', 'black'
-		];
+var blinkyPath = [];
+var clydePath = [];
+
 
 function getDestination() {
 	//console.log((pacman.y - 16) / 16);
@@ -55,63 +51,19 @@ var blinkyUpdate = function() {
 		console.log("blinkyY: " + blinkyY);
 		console.log("X COORD: " + xCoord);
 		console.log("Y COORD: " + yCoord);
-		path = getPath(blinkyX, blinkyY, xCoord, yCoord);
-		chasing = true;
-		temp = path.shift();
-	}
-	intersection = 0;
-	if (blinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(blinky.x, blinky.y, blinky.direction)) { //Left Arrow
-		intersection++;
-	}
-	if (blinky.willCollide(0, 1, 0, 3) && !isTouchingBottom(blinky.x, blinky.y, blinky.direction)) { //Up Arrow
-		intersection++;
-	}
-	if (blinky.willCollide(1, 0, 1, 2) && !isTouchingLeft(blinky.x, blinky.y, blinky.direction)) { //Right Arrow
-		intersection++;
-	}
-	if (blinky.willCollide(0, -1, 0, 4) && !isTouchingTop(blinky.x, blinky.y, blinky.direction)) { //Down Arrow
-		intersection++;
-	}
-	//var key = Math.floor(Math.random() * (40 - 37 + 1) + 37);
-	/*if (blinky.x < xCoord && blinky.willCollide(1, 0, 1, 2) && !isTouchingLeft(blinky.x, blinky.y, blinky.direction)) {
-		blinky.velocityX = 1; //Right arrow
-		blinky.velocityY = 0;
-		blinky.direction = 1;
-		blinky.keyPress = 2;
-	} else if (blinky.y < yCoord && blinky.willCollide(0, -1, 0, 4) && !isTouchingTop(blinky.x, blinky.y, blinky.direction)) {
-		blinky.velocityX = 0; //Down arrow
-		blinky.velocityY = -1;
-		blinky.direction = 0;
-		blinky.keyPress = 4;
-	}*/
-	if (intersection >= 3 || (blinky.velocityX == 0 && blinky.velocityY == 0)) {
-		var checkAgain = true;
-		var newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
-		while (checkAgain) {
-			newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
-			if (Math.abs(blinkyKey - newKey) != 2) {
-				checkAgain = false;
-			}
-			
-			if (newKey === 37 && isTouchingRight(blinky.x, blinky.y, blinky.direction)) {
-				checkAgain = true;
-			}
-			if (newKey === 38 && isTouchingBottom(blinky.x, blinky.y, blinky.direction)) {
-				checkAgain = true;
-			}
-			if (newKey === 39 && isTouchingLeft(blinky.x, blinky.y, blinky.direction)) {
-				checkAgain = true;
-			}
-			if (newKey === 40 && isTouchingTop(blinky.x, blinky.y, blinky.direction)) {
-				checkAgain = true;
-			}
+		if (blinky.frightened) {
+			blinkyPath = getPath(blinkyX, blinkyY, corners[1][0], corners[1][1]);
+		} else {
+			blinkyPath = getPath(blinkyX, blinkyY, xCoord, yCoord);
 		}
-		blinkyKey = newKey;
+		chasing = true;
+		temp = blinkyPath.shift();
 	}
+
 	if (Math.abs(oldBlinkyX - blinky.x) >= 16 || Math.abs(oldBlinkyY - blinky.y) >= 16) {
 		oldBlinkyX = blinky.x;
 		oldBlinkyY = blinky.y;
-		temp = path.shift();
+		temp = blinkyPath.shift();
 	}
 	if (temp == "North") {
 		blinkyKey = 38;
@@ -159,24 +111,49 @@ var blinkyUpdate = function() {
 		blinky.velocityY = 0;
 	}
 	changeKey++;
-	if (changeKey = 40 || path.length == 1) {
+	if (changeKey = 40 || blinkyPath.length == 1) {
 		chasing = false;
 		changeKey = 0;
 	}
 }
 
 var clydeUpdate = function() {
-	coord = getDestination();
-	xCoord = coord[0];
-	yCoord = coord[1];
+	var temp = 83;
 	intersection = 0;
 	
 	if ((clyde.y - 16) / 16 == Math.round((clyde.y - 16) / 16)) {
 		if ((clyde.x - 16) / 16 == Math.round((clyde.x - 16) / 16)) {
 			if (clyde.frightened && scaredTick > 500) {
 				clyde.frightened = false;
+				clydePath = [];
 			}
 		}
+	}
+	
+	if (clyde.frightened) {
+		if ((clyde.y - 16) / 16 == Math.round((clyde.y - 16) / 16)) {
+			if ((clyde.x - 16) / 16 == Math.round((clyde.x - 16) / 16)) {
+				clydeX = (clyde.y - 16) / 16;
+				clydeY = (clyde.x - 16) / 16;
+				clydePath = getPath(clydeX, clydeY, corners[2][0], corners[2][1]);
+				temp = clydePath.shift();
+			}
+		}
+	}
+
+	if (Math.abs(oldClydeX - clyde.x) >= 16 || Math.abs(oldClydeY - clyde.y) >= 16) {
+		oldClydeX = clyde.x;
+		oldClydeY = clyde.y;
+		temp = clydePath.shift();
+	}
+	if (temp == "North") {
+		clydeKey = 38;
+	} else if (temp == "South") {
+		clydeKey = 40;
+	} else if (temp == "East") {
+		clydeKey = 39;
+	} else if (temp == "West") {
+		clydeKey = 37;
 	}
 	
 	if (clyde.willCollide(-1, 0, 1, 1) && !isTouchingRight(clyde.x, clyde.y, clyde.direction)) { //Left Arrow
@@ -192,7 +169,7 @@ var clydeUpdate = function() {
 		intersection++;
 	}
 	
-	if (intersection >= 3 || (clyde.velocityX == 0 && clyde.velocityY == 0)) {
+	if ((intersection >= 3 || (clyde.velocityX == 0 && clyde.velocityY == 0)) && !clyde.frightened) {
 		var checkAgain = true;
 		var newKey = Math.floor(Math.random() * (40 - 37 + 1) + 37);
 		while (checkAgain) {

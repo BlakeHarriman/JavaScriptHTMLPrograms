@@ -18,7 +18,10 @@ var bottomLeftTouching = false;
 var bottomRightTouching = false;
 var oldBlinkyX = 240;
 var oldBlinkyY = 240;
+var oldClydeX = 240;
+var oldClydeY = 240;
 var scaredTick = 0;
+var corners = [[4, 1], [4, 26], [32, 1], [32, 26]]; //Corners for the ghosts to run to. Pinky, Blinky, Clyde, Inky
 
 px=26;
 py=13;
