@@ -18,6 +18,8 @@ var bottomLeftTouching = false;
 var bottomRightTouching = false;
 var oldBlinkyX = 240;
 var oldBlinkyY = 240;
+var oldPinkyX = 240;
+var oldPinkyY = 240;
 var oldClydeX = 240;
 var oldClydeY = 240;
 var scaredTick = 0;
@@ -133,8 +135,20 @@ function component(width, height, color, x, y, type) {
 			//console.log("HEIGHT: " + this.height / -2);
 			//ctx.fillStyle = "green";
 			ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
+		} else if (type == "pinky") {
+			if (pinky.frightened) {
+				ctx.fillStyle = 'blue';
+			} else {
+				ctx.fillStyle = 'pink';
+			}
+			//ctx.beginPath();
+			//ctx.arc(this.width / -2 + 9, this.height / -2 + 9, 6, 0, 2 * Math.PI);
+			//console.log("WIDTH: " + this.width / -2);
+			//console.log("HEIGHT: " + this.height / -2);
+			//ctx.fillStyle = "green";
+			ctx.fillRect(this.width / -2 + 1, this.width / -2 + 1, 16, 16);
 		} else if (type == "clyde") {
-			if (blinky.frightened) {
+			if (clyde.frightened) {
 				ctx.fillStyle = 'blue';
 			} else {
 				ctx.fillStyle = 'orange';
@@ -467,6 +481,12 @@ function wallCollision() {
 		blinky.velocityY = 0;
 	}
 	
+	if ((isTouchingLeft(pinky.x, pinky.y, pinky.direction) && (pinky.keyPress == 2)) || (isTouchingRight(pinky.x, pinky.y, pinky.direction) && pinky.keyPress == 1)) {
+		pinky.velocityX = 0;
+	} else if ((isTouchingTop(pinky.x, pinky.y, pinky.direction) && (pinky.keyPress == 4)) || (isTouchingBottom(pinky.x, pinky.y, pinky.direction) && (pinky.keyPress == 3))) {
+		pinky.velocityY = 0;
+	}
+	
 	if ((isTouchingLeft(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 2)) || (isTouchingRight(clyde.x, clyde.y, clyde.direction) && clyde.keyPress == 1)) {
 		clyde.velocityX = 0;
 	} else if ((isTouchingTop(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 4)) || (isTouchingBottom(clyde.x, clyde.y, clyde.direction) && (clyde.keyPress == 3))) {
@@ -492,6 +512,7 @@ function pelletCollision(x, y, direction) {
 						score += 50;
 						oneUp += 50;
 						blinky.frightened = true;
+						pinky.frightened = true;
 						clyde.frightened = true;
 						scaredTick = 0;
 					} else {
@@ -524,6 +545,13 @@ function teleport() {
 		blinky.x = -2;
 	}
 	
+	if (pinky.x == 1 && pinky.y - 16 == 272 && pinky.keyPress == 1) {
+		pinky.x = 466;
+	}
+	if (pinky.x == 463 && pinky.y - 16 == 272 && pinky.keyPress == 2) {
+		pinky.x = -2;
+	}
+	
 	if (clyde.x == 1 && clyde.y - 16 == 272 && clyde.keyPress == 1) {
 		clyde.x = 466;
 	}
@@ -536,8 +564,8 @@ function teleport() {
 function init() {
 	pacman = new component (35, 35, "yellow", 233, 432, "pac");
 	blinky = new component (35, 35, "red", 240, 240, "blinky");
+	pinky = new component (35, 35, "pink", 240, 240, "pinky");
 	//inky = new component (5, 5, "blue", 16, 13, "ghost");
-	//pinky = new component (5, 5, "pink", 16, 14, "ghost");
 	clyde = new component (35, 35, "orange", 224, 240, "clyde");
 	maze.start();
 }

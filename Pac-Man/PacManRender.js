@@ -3,15 +3,18 @@ COLS = 28;
 ROWS = 36;
 log = 3;
 var blinkyKey = 0;
+var pinkyKey = 0;
 var clydeKey = 0;
 keyBuffer = [];
 var BLOCK_W = W / COLS,
 	BLOCK_H = H / ROWS;
-var chasing = false;
+var blinkyChasing = false;
+var pinkyChasing = false;
 var changeKey = 0;
 var timing = 0;
 var temp = 83;
 var blinkyPath = [];
+var pinkyPath = [];
 var clydePath = [];
 
 
@@ -38,25 +41,19 @@ var blinkyUpdate = function() {
 		}
 	}
 	
-	if (xCoord != -1 && yCoord != -1 && chasing == false) {
+	if (xCoord != -1 && yCoord != -1 && blinkyChasing == false) {
 		if ((blinky.y - 16) / 16 == Math.round((blinky.y - 16) / 16)) {
 			if ((blinky.x - 16) / 16 == Math.round((blinky.x - 16) / 16)) {
 				blinkyX = (blinky.y - 16) / 16;
 				blinkyY = (blinky.x - 16) / 16;
 			}
 		}
-		console.log("BLINKY Y COORD: " + blinky.y);
-		console.log("BLINKY X COORD: " + blinky.x);
-		console.log("blinkyX: " + blinkyX);
-		console.log("blinkyY: " + blinkyY);
-		console.log("X COORD: " + xCoord);
-		console.log("Y COORD: " + yCoord);
 		if (blinky.frightened) {
 			blinkyPath = getPath(blinkyX, blinkyY, corners[1][0], corners[1][1]);
 		} else {
 			blinkyPath = getPath(blinkyX, blinkyY, xCoord, yCoord);
 		}
-		chasing = true;
+		blinkyChasing = true;
 		temp = blinkyPath.shift();
 	}
 
@@ -112,7 +109,105 @@ var blinkyUpdate = function() {
 	}
 	changeKey++;
 	if (changeKey = 40 || blinkyPath.length == 1) {
-		chasing = false;
+		blinkyChasing = false;
+		changeKey = 0;
+	}
+}
+
+var pinkyUpdate = function() {
+	coord = getDestination();
+	xCoord = coord[0];
+	yCoord = coord[1];
+	
+	if (xCoord - 4 >= 0 && yCoord >= 0 && map[xCoord - 4][yCoord] != 0) {
+		xCoord = xCoord - 4;
+	} else if (xCoord + 4 <= 27 && yCoord >= 0 && map[xCoord + 4][yCoord] != 0) {
+		xCoord = xCoord + 4;
+	} else if (xCoord >= 0 && yCoord - 4 >= 0 && map[xCoord][yCoord - 4] != 0) {
+		yCoord = yCoord - 4;
+	} else if (xCoord >= 0 && yCoord + 4 <= 35) {
+		yCoord = yCoord + 4;
+	}
+	
+	if ((pinky.y - 16) / 16 == Math.round((pinky.y - 16) / 16)) {
+		if ((pinky.x - 16) / 16 == Math.round((pinky.x - 16) / 16)) {
+			if (pinky.frightened && scaredTick > 500) {
+				pinky.frightened = false;
+			}
+		}
+	}
+	
+	if (xCoord >= 0 && yCoord >= 0 && map[xCoord, yCoord] != 0 && pinkyChasing == false) {
+		if ((pinky.y - 16) / 16 == Math.round((pinky.y - 16) / 16)) {
+			if ((pinky.x - 16) / 16 == Math.round((pinky.x - 16) / 16)) {
+				pinkyX = (pinky.y - 16) / 16;
+				pinkyY = (pinky.x - 16) / 16;
+			}
+		}
+		if (pinky.frightened) {
+			pinkyPath = getPath(pinkyX, pinkyY, corners[0][0], corners[0][1]);
+		} else {
+			pinkyPath = getPath(pinkyX, pinkyY, xCoord, yCoord);
+		}
+		pinkyChasing = true;
+		if (pinkyPath.length > 0) {
+			temp = pinkyPath.shift();
+		}
+	}
+
+	if ((Math.abs(oldPinkyX - pinky.x) >= 16 || Math.abs(oldPinkyY - pinky.y) >= 16) && pinkyPath.length > 0) {
+		oldPinkyX = pinky.x;
+		oldPinkyY = pinky.y;
+		temp = pinkyPath.shift();
+	}
+	if (temp == "North") {
+		pinkyKey = 38;
+	} else if (temp == "South") {
+		pinkyKey = 40;
+	} else if (temp == "East") {
+		pinkyKey = 39;
+	} else if (temp == "West") {
+		pinkyKey = 37;
+	} else {
+		pinkyKey = 83;
+	}
+	
+	if(pinkyKey === 37){ //Left Arrow
+		if (pinky.willCollide(-1, 0, 1, 1) && !isTouchingRight(pinky.x, pinky.y, pinky.direction)) {
+			pinky.velocityX = -1;
+			pinky.velocityY = 0;
+			pinky.direction = 1;
+			pinky.keyPress = 1;
+		}
+	} else if(pinkyKey === 38){ //Up Arrow
+		if (pinky.willCollide(0, 1, 0, 3) && !isTouchingBottom(pinky.x, pinky.y, pinky.direction)) {
+			pinky.velocityX = 0;
+			pinky.velocityY = 1;
+			pinky.direction = 0;
+			pinky.keyPress = 3;
+			//console.log("UP");
+		}
+	} else if(pinkyKey === 39){ //Right Arrow
+		if (pinky.willCollide(1, 0, 1, 2) && !isTouchingLeft(pinky.x, pinky.y, pinky.direction)) {
+			pinky.velocityX = 1;
+			pinky.velocityY = 0;
+			pinky.direction = 1;
+			pinky.keyPress = 2;
+		}
+	} else if(pinkyKey === 40){ //Down Arrow
+		if (pinky.willCollide(0, -1, 0, 4) && !isTouchingTop(pinky.x, pinky.y, pinky.direction)) {
+			pinky.velocityX = 0;
+			pinky.velocityY = -1;
+			pinky.direction = 0;
+			pinky.keyPress = 4;
+		}
+	} else if (pinkyKey === 83) {
+		pinky.velocityX = 0;
+		pinky.velocityY = 0;
+	}
+	changeKey++;
+	if (changeKey = 40 || pinkyPath.length == 1) {
+		pinkyChasing = false;
 		changeKey = 0;
 	}
 }
@@ -334,6 +429,7 @@ function updateGame() {
 	maze.clear();
 	update();
 	blinkyUpdate();
+	pinkyUpdate();
 	clydeUpdate();
 	drawMap();
 	touching = 0;
@@ -342,10 +438,12 @@ function updateGame() {
 	teleport();
 	pacman.newPos();
 	pacman.update();
-	blinky.newPos();
-	blinky.update();
-	clyde.newPos();
-	clyde.update();
+	//blinky.newPos();
+	//blinky.update();
+	pinky.newPos();
+	pinky.update();
+	//clyde.newPos();
+	//clyde.update();
 	scaredTick++;
 	
 	
