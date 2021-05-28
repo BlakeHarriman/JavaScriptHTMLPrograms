@@ -108,7 +108,7 @@ var blinkyUpdate = function() {
 		blinky.velocityY = 0;
 	}
 	changeKey++;
-	if (changeKey = 40 || blinkyPath.length == 1) {
+	if (changeKey = 20 || blinkyPath.length == 1) {
 		blinkyChasing = false;
 		changeKey = 0;
 	}
@@ -429,7 +429,7 @@ function updateGame() {
 	maze.clear();
 	update();
 	blinkyUpdate();
-	pinkyUpdate();
+	//pinkyUpdate();
 	clydeUpdate();
 	drawMap();
 	touching = 0;
@@ -438,10 +438,10 @@ function updateGame() {
 	teleport();
 	pacman.newPos();
 	pacman.update();
-	//blinky.newPos();
-	//blinky.update();
-	pinky.newPos();
-	pinky.update();
+	blinky.newPos();
+	blinky.update();
+	//pinky.newPos();
+	//pinky.update();
 	//clyde.newPos();
 	//clyde.update();
 	scaredTick++;
