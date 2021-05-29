@@ -1,30 +1,5 @@
 var players = []
 counter = 0
-var board = [];
-var state = [];
-var BLANK = -1
-var WALL = 0;
-var PELLET = 1;
-var PACMAN = 2;
-var playing = true;
-var pacman;
-var touching = 0;
-var blinking = 0;
-var score = 0;
-var lives = 3;
-var oneUp = 0;
-var topLeftTouching = false;
-var topRightTouching = false;
-var bottomLeftTouching = false;
-var bottomRightTouching = false;
-var oldBlinkyX = 240;
-var oldBlinkyY = 240;
-var oldPinkyX = 240;
-var oldPinkyY = 240;
-var oldClydeX = 240;
-var oldClydeY = 240;
-var scaredTick = 0;
-var corners = [[4, 1], [4, 26], [32, 1], [32, 26]]; //Corners for the ghosts to run to. Pinky, Blinky, Clyde, Inky
 
 
 var maze = {
@@ -56,6 +31,7 @@ function component(width, height, color, x, y) {
 	this.boundXLeft = -x;
 	this.slowed = false;
 	this.slowBound = Math.floor(Math.random() * 300) + 50
+	this.isColliding = false
 	this.update = function() {
         ctx = maze.context;
         ctx.save();
@@ -64,6 +40,9 @@ function component(width, height, color, x, y) {
         ctx.fillStyle = color;
 		ctx.strokeStyle = 'yellow';
 		ctx.fillStyle = 'yellow';
+		if (this.isColliding) {
+			ctx.fillStyle = "red"
+		}
 		ctx.fillRect(x, y, this.width, this.height);
         ctx.restore();    
     }
@@ -88,7 +67,7 @@ function addPlayer() {
 function init() {
 	addPlayer()
 	addPlayer()
-	addPlayer()
+	/*addPlayer()
 	addPlayer()
 	setTimeout(function() {
 		addPlayer()
@@ -98,7 +77,7 @@ function init() {
 	}, 1000)
 	setTimeout(function() {
 		addPlayer()
-	}, 1500)
+	}, 1500)*/
 	//pacman = new component (35, 35, "yellow", 60, 10);
 	maze.start();
 }

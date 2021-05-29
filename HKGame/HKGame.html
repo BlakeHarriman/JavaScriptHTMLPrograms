@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Pac-Man</title>
+		<title>Hollow Knight Game</title>
 		<link rel='stylesheet' href='style.css' />
+		<script type="text/javascript" src="js/GameWorld.js"></script>
+		<script type="text/javascript" src="js/GameObject.js"></script>
+		<script type="text/javascript" src="js/Player.js"></script>
 	</head>
 	<body style="background-color: #888">
-		<!--<canvas id="canvas" width="448" height="576" style="display: block; margin: 0 auto; background-color: #000000;">-->
-		<script src='HK.js'></script>
-		<script src='HKRender.js'></script>
+			<canvas id="canvas" width="750" height="400" style="border:1px solid lightgrey;">
+				Your browser does not support the HTML5 canvas tag.
+			</canvas>
+			<script>
+				// Listen to the onLoad event, then create a game world
+				window.onload = function (){
+					var gameWorld = new GameWorld('canvas');
+				}
+			</script>
 	</body>
 </html>
