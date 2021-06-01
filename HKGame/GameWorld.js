@@ -1,5 +1,5 @@
 class GameWorld {
-
+    
     constructor(canvasId){
         this.canvas = null;
         this.context = null;
@@ -24,13 +24,21 @@ class GameWorld {
 
     createWorld() {
         this.gameObjects = [ //x, y, vx, vy, mass
-            new Player(this.context, 250, -50, 0, 200, 1),
-            new Player(this.context, 450, -50, 0, 200, 1),
-            new Player(this.context, 200, -50, 0, 200, 1),
-            new Player(this.context, 350, -50, 0, 200, 1),
-            new Player(this.context, 600, -50, 0, 200, 1),
+            new Player(this.context, 250, -50, 0, 200, 1, "grimm", "eduboy25"),
+            new Player(this.context, 450, -50, 0, 200, 1, "quirrel", "alegendarybagel"),
+            new Player(this.context, 200, -50, 0, 200, 1, "seer", "NerfIrelia73"),
+            new Player(this.context, 350, -50, 0, 200, 1, "sly", "Gwonkee"),
+            new Player(this.context, 600, -50, 0, 200, 1, "divine", "Nat3rtater"),
+            new Player(this.context, 700, -50, 0, 200, 1, "cloth", "superspock9000"),
+            new Player(this.context, 1000, -50, 0, 200, 1, "elderbug", "eisengard"),
+            new Player(this.context, 1200, -50, 0, 200, 1, "hornet", "Jesse Sandcastle"),
+            new Player(this.context, 1400, -50, 0, 200, 1, "iselda", "shanawastaken_"),
+            new Player(this.context, 1300, -50, 0, 200, 1, "little fool", "Yes"),
+            new Player(this.context, 1500, -50, 0, 200, 1, "myla", "Pisces"),
+            new Player(this.context, 850, -50, 0, 200, 1, "the knight", "Sedic")
             //new Player(this.context, 300, 300, 50, -50, 1)
         ];
+        this.winners = [];
     }
 
     gameLoop(timeStamp) {
@@ -45,21 +53,49 @@ class GameWorld {
 
         this.detectSlowDown()
         this.detectCollisions();
-
         this.clearCanvas();
 
         // Loop over all game objects to draw
+        this.context.fillStyle = "red";
+        this.context.fillRect(700, 860, 200, 40);
         for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].draw();
-            console.log("hello")
         }
-//        setTimeout(function() {
-  //          this.gameObjects.push(new Player(this.context, 250, -50, 0, 200, 1))
-    //    }, 3000)
+        this.checkTarget()
+        if (this.winners.length > 0) {
+            this.calcWinner()
+        }
 
         // The loop function has reached it's end
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+    }
+
+    addPlayer() {
+        this.gameObjects.push(new Player(this.context, 100, -50, 0, 200, 1, "grimm", "randomname9000"));
+    }
+
+    checkTarget() {
+        for (var i = 0; i < this.gameObjects.length; i++) {
+            var obj1 = this.gameObjects[i];
+            if (obj1.stopped && obj1.x + obj1.width / 2 > 700 && obj1.x + obj1.width / 2 < 900 && !this.winners.includes(obj1)) {
+                this.winners.push(obj1)
+            }
+        }
+    }
+
+    calcWinner() {
+        var winner = 0
+        for (var i = 1; i < this.winners.length; i++) {
+            if (Math.abs(this.winners[winner].x + this.winners[winner].width / 2 - 800) > Math.abs(this.winners[i].x + this.winners[i].width / 2 - 800)) {
+                this.winners[winner].won = false
+                winner = i
+            } else {
+                this.winners[i].won = false
+            }
+        }
+        this.winners[winner].won = true
+        this.winners[winner].draw()
     }
 
 
@@ -68,7 +104,7 @@ class GameWorld {
             var obj1 = this.gameObjects[i];
             if (obj1.y >= obj1.slowBound && !obj1.slowed) {
                 obj1.vy = 30
-                obj1.vx = Math.floor(Math.random() * 400) - 200
+                obj1.vx = Math.floor(Math.random() * 600) - 300
                 obj1.slowed = true
             }
         }
@@ -113,9 +149,9 @@ class GameWorld {
 
         for (var i = 0; i < this.gameObjects.length; i++) {
             var obj1 = this.gameObjects[i];
-            if (obj1.x + 50 >= 750 || obj1.x <= 0) {
+            if (obj1.x + 50 >= 1600 || obj1.x <= 0) {
                 obj1.vx = obj1.vx * -1
-            } else if (obj1.y + 50 >= 400) {
+            } else if (obj1.y + 50 >= 900) {
                 obj1.vx = 0
                 obj1.vy = 0
                 obj1.stopped = true;

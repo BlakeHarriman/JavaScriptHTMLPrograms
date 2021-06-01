@@ -3,18 +3,32 @@
 	<head>
 		<title>Hollow Knight Game</title>
 		<link rel='stylesheet' href='style.css' />
-		<script type="text/javascript" src="js/GameWorld.js"></script>
-		<script type="text/javascript" src="js/GameObject.js"></script>
-		<script type="text/javascript" src="js/Player.js"></script>
+		<script type="text/javascript" src="GameWorld.js"></script>
+		<script type="text/javascript" src="GameObject.js"></script>
+		<script type="text/javascript" src="Player.js"></script>
 	</head>
 	<body style="background-color: #888">
-			<canvas id="canvas" width="750" height="400" style="border:1px solid lightgrey;">
+			<canvas id="canvas" width="1600" height="900" style="border:1px solid lightgrey; background-color: black;">
 				Your browser does not support the HTML5 canvas tag.
 			</canvas>
+			<button onclick="addPlayers()">CLICK ME TO ADD A NEW PLAYER</button>
+			<img id="grimm" src="./assets/grimm.png" style="visibility: hidden;">
+			<img id="quirrel" src="./assets/quirrel.png" style="visibility: hidden;">
+			<img id="seer" src="./assets/seer.png" style="visibility: hidden;">
+			<img id="sly" src="./assets/sly.png" style="visibility: hidden;">
+			<img id="divine" src="./assets/divine.png" style="visibility: hidden;">
+			<img id="cloth" src="./assets/cloth.png" style="visibility: hidden;">
+			<img id="elderbug" src="./assets/elderbug.png" style="visibility: hidden;">
+			<img id="hornet" src="./assets/hornet.png" style="visibility: hidden;">
+			<img id="iselda" src="./assets/iselda.png" style="visibility: hidden;">
+			<img id="little fool" src="./assets/little fool.png" style="visibility: hidden;">
+			<img id="myla" src="./assets/myla.png" style="visibility: hidden;">
+			<img id="the knight" src="./assets/the knight.png" style="visibility: hidden;">
 			<script>
 				// Listen to the onLoad event, then create a game world
-				window.onload = function (){
-					var gameWorld = new GameWorld('canvas');
+				var gameWorld = new GameWorld('canvas');
+				function addPlayers() {
+					gameWorld.addPlayer()
 				}
 			</script>
 	</body>
