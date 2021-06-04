@@ -8,7 +8,10 @@
 		<script type="text/javascript" src="Player.js"></script>
 	</head>
 	<body style="background-color: #888">
-			<canvas id="canvas" width="1600" height="900" style="border:1px solid lightgrey; background-color: black;">
+			<canvas class="canv2" id="canvas2" width="500" height="500" style="border:1px solid lightgrey; background-color: black;">
+				Your browser does not support the HTML5 canvas tag.
+			</canvas>
+			<canvas class="canv1" id="canvas" width="2040" height="1150" style="border:1px solid lightgrey; background-color: black;">
 				Your browser does not support the HTML5 canvas tag.
 			</canvas>
 			<button onclick="addPlayers()">CLICK ME TO ADD A NEW PLAYER</button>
@@ -33,3 +36,18 @@
 			</script>
 	</body>
 </html>
+
+<Style>
+	.canv1 {
+		position: absolute;
+		top: 280px;
+	}
+
+	.canv2 {
+		position: absolute;
+		left: 2050px;
+	}
+
+
+
+</Style>

@@ -12,7 +12,7 @@ class GameObject
 
         this.isColliding = false;
         this.slowed = false;
-        this.slowBound = Math.floor(Math.random() * 75) + 50;
+        this.slowBound = Math.floor(Math.random() * 200) + 50;
         this.stopped = false;
         this.won = false;
     }
