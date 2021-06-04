@@ -36,12 +36,3 @@ button {
   margin: 2px 2px;
   cursor: pointer;
 }
-
-img {
-        display: block;
-        left: 17%;
-        position: absolute;
-        top: 16%;
-		cursor: pointer;
-        z-index: 1;
-    }

@@ -51,13 +51,15 @@ class GameWorld {
             this.gameObjects[i].update(secondsPassed);
         }
 
-        this.detectSlowDown()
+        this.detectSlowDown();
         this.detectCollisions();
         this.clearCanvas();
 
         // Loop over all game objects to draw
-        this.context.fillStyle = "red";
-        this.context.fillRect(820, 1100, 400, 50);
+        var bgimg = document.getElementById("hot spring")
+        this.context.drawImage(bgimg, 0, 0, 2040, 1147.5)
+        //this.context.fillStyle = "red";
+        //this.context.fillRect(520, 900, 930, 50);
         for (var i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].draw();
         }
@@ -71,14 +73,15 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
     }
 
-    addPlayer() {
-        this.gameObjects.push(new Player(this.context, 100, -50, 0, 200, 1, "grimm", "randomname9000"));
+    addPlayer(name) {
+        console.log(name)
+        this.gameObjects.push(new Player(this.context, Math.floor(Math.random() * 1800) + 100, -50, 0, 200, 1, name, "randomname9000"));
     }
 
     checkTarget() {
         for (var i = 0; i < this.gameObjects.length; i++) {
             var obj1 = this.gameObjects[i];
-            if (obj1.stopped && obj1.x + obj1.width / 2 > 820 && obj1.x + obj1.width / 2 < 1220 && !this.winners.includes(obj1)) {
+            if (obj1.stopped && obj1.x + obj1.width / 2 > 520 && obj1.x + obj1.width / 2 < 1450 && !this.winners.includes(obj1)) {
                 this.winners.push(obj1)
             }
         }
@@ -87,7 +90,7 @@ class GameWorld {
     calcWinner() {
         var winner = 0
         for (var i = 1; i < this.winners.length; i++) {
-            if (Math.abs(this.winners[winner].x + this.winners[winner].width / 2 - 1020) > Math.abs(this.winners[i].x + this.winners[i].width / 2 - 1020)) {
+            if (Math.abs(this.winners[winner].x + this.winners[winner].width / 2 - 985) > Math.abs(this.winners[i].x + this.winners[i].width / 2 - 985)) {
                 this.winners[winner].won = false
                 winner = i
             } else {
@@ -151,7 +154,7 @@ class GameWorld {
             var obj1 = this.gameObjects[i];
             if (obj1.x + 60 >= 2040 || obj1.x <= 0) {
                 obj1.vx = obj1.vx * -1
-            } else if (obj1.y + 60 >= 1150) {
+            } else if (obj1.y + 60 >= 900) {
                 obj1.vx = 0
                 obj1.vy = 0
                 obj1.stopped = true;

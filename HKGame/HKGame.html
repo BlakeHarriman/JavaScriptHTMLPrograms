@@ -27,11 +27,13 @@
 			<img id="little fool" src="./assets/little fool.png" style="visibility: hidden;">
 			<img id="myla" src="./assets/myla.png" style="visibility: hidden;">
 			<img id="the knight" src="./assets/the knight.png" style="visibility: hidden;">
+			<img id="hot spring" src="./assets/hot spring.png" style="visibility: hidden;">
 			<script>
+				var charArr = ["grimm", "quirrel", "seer", "sly", "divine", "cloth", "elderbug", "hornet", "iselda", "little fool", "myla", "the knight"]
 				// Listen to the onLoad event, then create a game world
 				var gameWorld = new GameWorld('canvas');
 				function addPlayers() {
-					gameWorld.addPlayer()
+					gameWorld.addPlayer(charArr[Math.floor(Math.random() * charArr.length)])
 				}
 			</script>
 	</body>
@@ -47,7 +49,6 @@
 		position: absolute;
 		left: 2050px;
 	}
-
 
 
 </Style>
